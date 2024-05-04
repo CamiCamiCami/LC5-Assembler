@@ -1,4 +1,5 @@
 #include "cola.h"
+#include <stdio.h>
 
 Cola initCola(){
     Cola nueva = malloc(sizeof(struct __cola));
@@ -28,6 +29,10 @@ void pushCola(Cola cola, void* valor){
 }
 
 void* popCola(Cola cola){
+    if (cola->fin == NULL){
+        fprintf(stderr, "No puede hacer popCola en una cola de largo 0\n");
+        exit(1);
+    }
     // Tomamos lo que se necesita del nodo final
     void* valor = cola->fin->valor;
     ColaNodo ant = cola->fin->ant;

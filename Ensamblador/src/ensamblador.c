@@ -1,6 +1,6 @@
 #include "ensamblador.h"
 
-FILE* abrir_archivo(int argc, char **argv){
+char *interpreta_args(int argc, char **argv){
     if(argc < 2){
         printf("Falta el archivo a ensamblar\n");
         exit(1);
@@ -10,18 +10,11 @@ FILE* abrir_archivo(int argc, char **argv){
         exit(1);
     }
     
-    FILE *f = fopen(argv[1], "r");
-    
-    if(f == NULL){
-        printf("Error abriendo el archivo, %i\n", errno);
-        exit(1);
-    }
-
-    return f;
+    return argv[1];
 }
 
 
 int main(int argc, char **argv){
-    FILE *f = abrir_archivo(argc, argv);
+    char path[] = interpreta_args(argc, argv);
     
 }
