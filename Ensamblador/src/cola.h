@@ -2,20 +2,28 @@
 
 struct __cola_nodo {
     void* valor;
-    __cola_nodo* sig;
-    __cola_nodo* ant;
+    struct __cola_nodo *sig;
+    struct __cola_nodo *ant;
 };
 
 
-typedef __cola_nodo* NodoCola;
+typedef struct __cola_nodo* ColaNodo;
 
 struct __cola
 {
-    NodoCola cabeza;
-    NodoCola fin;
+    ColaNodo cabeza;
+    ColaNodo fin;
 };
 
-typedef __cola* Cola;
+typedef struct __cola* Cola;
 
 
 Cola initCola();
+
+void pushCola(Cola cola, void* valor);
+
+void* popCola(Cola cola);
+
+int lengthCola(Cola cola);
+
+void freeCola(Cola cola);
