@@ -1,5 +1,7 @@
-#include "cola.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include "cola.h"
+#include "debug.h"
 
 Cola initCola(){
     Cola nueva = malloc(sizeof(struct __cola));
@@ -28,6 +30,10 @@ void pushCola(Cola cola, void* valor){
     }
 }
 
+void freeColaNodo(ColaNodo nodo){
+    free(nodo);
+}
+
 void* popCola(Cola cola){
     if (cola->fin == NULL){
         fprintf(stderr, "No puede hacer popCola en una cola de largo 0\n");
@@ -38,15 +44,17 @@ void* popCola(Cola cola){
     ColaNodo ant = cola->fin->ant;
     // Liberamos el ultimo nodo
     freeColaNodo(cola->fin);
-    // Actualizamos el nuevo ultimo acorde
-    ant->sig = NULL;
-    // Seteamos el nuevo ultimo
-    cola->fin = ant;
+    if(ant != NULL){
+        // Si la cola no está vacia
+        // Actualizamos el nuevo ultimo acorde
+        ant->sig = NULL;
+        cola->fin = ant;
+    } else {
+        // Si la cola está vacia
+        cola->cabeza = NULL;
+        cola->fin == NULL;
+    }
     return valor;
-}
-
-void freeColaNodo(ColaNodo nodo){
-    free(nodo);
 }
 
 int lengthCola(Cola cola){

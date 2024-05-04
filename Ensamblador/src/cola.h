@@ -1,11 +1,11 @@
-#include <stdlib.h>
+
+
 
 struct __cola_nodo {
     void* valor;
     struct __cola_nodo *sig;
     struct __cola_nodo *ant;
 };
-
 
 typedef struct __cola_nodo* ColaNodo;
 

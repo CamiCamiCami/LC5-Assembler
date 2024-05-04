@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "escaner.h": "c"
+        "escaner.h": "c",
+        "cola.h": "c"
     }
 }
