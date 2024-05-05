@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <stdlib.h>
 #include "escaner.h"
 #include "cola.h"
 #include "utils.h"

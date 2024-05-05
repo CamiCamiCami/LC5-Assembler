@@ -24,9 +24,12 @@ int main(int argc, char **argv){
     Escaner lector = initEscaner(path);
     debug_print("main: Tenemos el lector, %p\n", lector);
     
+
+	
     Cola cola = initCola();
     unsigned short dir_act = 0;
-    for(char* linea = nextEscaner(lector); tieneProximoEscaner(lector); linea = nextEscaner(lector)){
+    while(tieneProximoEscaner(lector)){
+		char* linea = nextEscaner(lector);
 		debug_print("parseando linea \"%s\"\n", linea);
 		Token tokens[3];
 		int c_tokens = parsearTokens(linea, tokens);
@@ -48,6 +51,7 @@ int main(int argc, char **argv){
 			debug_print("etiqueta %s en direccion %i\n", tokens[0], dir_act);
 			opcode = comoOpcodeToken(tokens[1]);
 			if (opcode == 0){
+				// Manejo de Error
 				fprintf(stderr, "Sintaxis invalida, esperaba una instruccion pero encontro %s", tokens[1]);
 				exit(1);
 			}
@@ -56,6 +60,7 @@ int main(int argc, char **argv){
 			}		
 		} else {
 			if (!(c_tokens == 1 || c_tokens == 2)){
+				// Manejo de Error
 				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 1-2 pero encontro %i\n", linea, c_tokens);
 				exit(1);
 			}
@@ -69,5 +74,7 @@ int main(int argc, char **argv){
         free(linea);
         dir_act++;
     }
+
+
     debug_print("Se pushearon %i instrucciones\n", lengthCola(cola));
 }

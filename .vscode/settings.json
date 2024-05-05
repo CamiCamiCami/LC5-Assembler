@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "random": "cpp",
-        "argumentos.h": "c"
+        "argumentos.h": "c",
+        "symtable.h": "c",
+        "stdlib.h": "c",
+        "stdbool.h": "c"
     }
 }
