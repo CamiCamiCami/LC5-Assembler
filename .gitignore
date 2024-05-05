@@ -1,4 +1,6 @@
 prueba.c
 ensamblador.o
 random.s
-obj/
+obj
+prueba.c
+pruebas
