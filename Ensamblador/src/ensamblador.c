@@ -31,10 +31,12 @@ int main(int argc, char **argv){
         if(ins == NULL){
             continue;
         }
+        char str[50];
+        toStringArgumento(ins->args[0], str);
         if (ins->etiqueta){
-            debug_print("main: instruccion con %s, %i, %p\n", ins->etiqueta, (int)ins->OPCODE, ins->args);
+            debug_print("main: instruccion con %s, %i, %s\n", ins->etiqueta, (int)ins->OPCODE, str);
         } else {
-            debug_print("main: instruccion con %p, %i, %p\n", ins->etiqueta, (int)ins->OPCODE, ins->args);
+            debug_print("main: instruccion con %p, %i, %s\n", ins->etiqueta, (int)ins->OPCODE, str);
         }
         free(ins);
         free(linea);

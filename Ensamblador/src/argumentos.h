@@ -27,3 +27,7 @@ int tipoArgumento(Argumento arg);
 
 void* valorArgumento(Argumento arg);
 
+void printArgumento(Argumento arg);
+
+void toStringArgumento(Argumento arg, char* rtn);
+
