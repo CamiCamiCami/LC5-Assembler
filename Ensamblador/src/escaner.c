@@ -59,4 +59,12 @@ void resetEscaner(Escaner escaner){
 }
 
 
+bool tieneProximoEscaner(Escaner escaner){
+	return !feof(escaner);
+}
+
+void closeEscaner(Escaner escaner){
+	fclose(escaner);
+}
+
 

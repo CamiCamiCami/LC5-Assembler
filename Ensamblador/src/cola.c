@@ -55,7 +55,7 @@ void* popCola(Cola cola){
     } else {
         // Si la cola está vacia
         cola->cabeza = NULL;
-        cola->fin == NULL;
+        cola->fin = NULL;
     }
     return valor;
 }

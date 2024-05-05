@@ -1,8 +1,23 @@
 #include "tokens.h"
+#include "utils.h"
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
+
+int comoOpcodeToken(Token token){
+	char cpy[lengthToken(token)];
+	comoStringToken(token, cpy);
+	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
+	
+    for(int i = 0; i < CANT_CODIGOS_INS; i++){
+        if(!strcmp(cpy, CODIGOS_INSTRUCCION[i])){
+            return i+1;
+        }
+    }
+    return 0;
+}
 
 bool esEspacio(char c){
     return (c == ' ' || c == '\t');
@@ -57,8 +72,6 @@ int parsearTokens(char linea[], Token tokens[MAX_TOKENS]){
             tokens[c_tokens++] = initToken(buffer);
         }
     }
-
-    return c_tokens;
 
     if (idx_buff > 0){
         if (c_tokens >= MAX_TOKENS){

@@ -1,5 +1,4 @@
 #include "ensamblador.h"
-#include "utils.h"
 
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
@@ -25,21 +24,50 @@ int main(int argc, char **argv){
     Escaner lector = initEscaner(path);
     debug_print("main: Tenemos el lector, %p\n", lector);
     
-    char* linea = nextEscaner(lector);
-    for(; *linea != '\0'; linea = nextEscaner(lector)){
-        Instruccion ins = initInstruccion(linea);
-        if(ins == NULL){
-            continue;
-        }
-        char str[50];
-        toStringArgumento(ins->args[0], str);
-        if (ins->etiqueta){
-            debug_print("main: instruccion con %s, %i, %s\n", ins->etiqueta, (int)ins->OPCODE, str);
-        } else {
-            debug_print("main: instruccion con %p, %i, %s\n", ins->etiqueta, (int)ins->OPCODE, str);
-        }
-        free(ins);
+    Cola cola = initCola();
+    unsigned short dir_act = 0;
+    for(char* linea = nextEscaner(lector); tieneProximoEscaner(lector); linea = nextEscaner(lector)){
+		debug_print("parseando linea \"%s\"\n", linea);
+		Token tokens[3];
+		int c_tokens = parsearTokens(linea, tokens);
+		debug_print("encontro %i tokens\n", c_tokens);
+		if (c_tokens == 0){
+			continue;
+		}
+		
+		int opcode = comoOpcodeToken(tokens[0]);
+		Argumento* args = NULL;
+		
+		if(opcode == 0){
+			if (!(c_tokens == 2 || c_tokens == 3)){
+				// Manejo de Error
+				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 2-3 pero encontro %i\n", linea, c_tokens);
+				exit(1);
+			}
+			
+			debug_print("etiqueta %s en direccion %i\n", tokens[0], dir_act);
+			opcode = comoOpcodeToken(tokens[1]);
+			if (opcode == 0){
+				fprintf(stderr, "Sintaxis invalida, esperaba una instruccion pero encontro %s", tokens[1]);
+				exit(1);
+			}
+			if(c_tokens == 3) {
+				args = parsearArgumentos(tokens[2]);
+			}		
+		} else {
+			if (!(c_tokens == 1 || c_tokens == 2)){
+				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 1-2 pero encontro %i\n", linea, c_tokens);
+				exit(1);
+			}
+			if (c_tokens == 2){
+				args = parsearArgumentos(tokens[1]);	
+			}
+		}
+		
+        Instruccion ins = initInstruccion(opcode, args);
+        pushCola(cola, ins);
         free(linea);
+        dir_act++;
     }
-    free(linea);
+    debug_print("Se pushearon %i instrucciones\n", lengthCola(cola));
 }
