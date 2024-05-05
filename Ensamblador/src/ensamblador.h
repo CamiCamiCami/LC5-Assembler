@@ -2,5 +2,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "escaner.h"
+#include "instruccion.h"
 
 

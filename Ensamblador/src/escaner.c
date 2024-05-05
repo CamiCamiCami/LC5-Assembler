@@ -1,7 +1,10 @@
 #include <errno.h>
 #include "escaner.h"
 #include "cola.h"
-#include "debug.h"
+#include "utils.h"
+
+#define DEBUG 0
+#define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
 Escaner initEscaner(char path[]){
     Escaner escaner = fopen(path, "r");
@@ -54,3 +57,6 @@ char* nextEscaner(Escaner Escaner){
 void resetEscaner(Escaner escaner){
     rewind(escaner);
 }
+
+
+

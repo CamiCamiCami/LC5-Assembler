@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "cola.h"
-#include "debug.h"
+#include "utils.h"
+
+#define DEBUG 0
+#define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
 Cola initCola(){
     Cola nueva = malloc(sizeof(struct __cola));
