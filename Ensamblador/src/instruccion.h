@@ -1,11 +1,35 @@
-#include "argumentos.h"
-#include "enum_instrucciones.h"
+#include "utils.h"
 
-struct __instruccion{
-    InstruccionProcesador INS;
-    Argumento* args;
-    int argc;
+enum __instruccion{
+    ADD = 1,
+    SUB,
+    AND,
+    OR,
+    ADDI,
+    ANDI,
+    ORI,
+    BRp,
+    BRz,
+    BRn,
+    JR,
+    JALR,
+    TRAP,
+    RETI,
+    NOT,
+    JAL,
+    LD,
+    ST,
+    LDR,
+    STR,
+    LUI,
+    LORI,
+    LJMP
 };
-typedef struct __instruccion *Instruccion;
 
-Instruccion initInstruccion(InstruccionProcesador ins, Argumento* args);
+typedef enum __instruccion Instruccion;
+
+Instruccion deString(char token[]);
+
+int conseguirArgsTipo(Instruccion ins, int args[5]);
+
+bin conseguirBase(Instruccion ins);
