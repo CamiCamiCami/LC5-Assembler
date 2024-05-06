@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "Tipos.h"
+#include "../utils.h"
 
 struct __symbol {
     char* label;

@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "escaner.h"
-#include "instruccion.h"
-#include "utils.h"
 #include "cola.h"
 #include "tokens.h"
+#include "operacion.h"
 #include "symtable/symtable.h"
+#include "utils.h"
 
 

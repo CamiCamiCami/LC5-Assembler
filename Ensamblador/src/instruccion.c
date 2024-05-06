@@ -1,13 +1,17 @@
 #include "instruccion.h"
 #include "utils.h"
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+#include "helpers_traduccion.h"
 
 #define CANT_CODIGOS_INS 23
 static const char CODIGOS_INSTRUCCION[CANT_CODIGOS_INS][5] = {"add", "sub", "and", "or", "addi", "andi", "ori", "brp", "brz", "brn", "jr", "jalr", "trap", "reti", "not", "jal", "ld", "st", "str", "ldr", "lui", "lori", "ljmp"};
 
 Instruccion deString(char token[]){
-	char cpy[lengthToken(token)];
-	comoStringToken(token, cpy);
+	char cpy[strlen(token)];
+	strcpy(token, cpy);
 	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
 	
     for(int i = 0; i < CANT_CODIGOS_INS; i++){
@@ -168,10 +172,65 @@ bin conseguirBase(Instruccion INS){
     case LORI:
         return 0b0111000100000000;
     case LJMP:
-        return 101100000000000000;
+        return 0b1011000000000000;
     default:
         fprintf(stderr, "Instruccion base INS inexistente. Esperaba un codigo 1-%i, recibio %i\n", CANT_CODIGOS_INS, INS);
         exit(1);
         break;
     }
+}
+
+
+Traductor conseguirTraductor(Instruccion INS){
+	switch (INS) {
+		case ADD:
+        	return traducirADD;
+	    case SUB:
+	        return traducirSUB;
+	    case AND:
+	        return traducirAND;
+	    case OR:
+	        return traducirOR;
+	    case ADDI:
+	        return traducirADDI;
+	    case ANDI:
+	       return traducirANDI;
+	    case ORI:
+	        return traducirORI;
+	    case BRp:
+	        return traducirBRp;
+	    case BRz:
+	        return traducirBRz;
+	    case BRn:
+	        return traducirBRn;
+	    case JR:
+	        return traducirJR;
+	    case JALR:
+	        return traducirJALR;
+	    case TRAP:
+	        return traducirTRAP;
+	    case RETI:
+	        return traducirRETI;
+	    case NOT:
+	        return traducirNOT;
+	    case JAL:
+	        return traducirJAL;
+	    case LD:
+	        return traducirLD;
+	    case ST:
+	        return traducirST;
+	    case LDR:
+	        return traducirLDR;
+	    case STR:
+	        return traducirSTR;
+	    case LUI:
+	        return traducirLUI;
+	    case LORI:
+	        return traducirLORI;
+	    case LJMP:
+	        return traducirLJMP;
+	    default:
+	        fprintf(stderr, "Instruccion base INS inexistente. Esperaba un codigo 1-%i, recibio %i\n", CANT_CODIGOS_INS, INS);
+			exit(1);
+	}
 }

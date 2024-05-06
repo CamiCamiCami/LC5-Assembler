@@ -17,6 +17,21 @@ char *interpreta_args(int argc, char **argv){
 }
 
 #define TABLE_SIZE 11
+#define ORIG 3000
+
+void comoStr(bin word, char repr[17]){
+	bin k;
+	for(int c = 15; c >= 0; c--){
+		k = word >> c;
+
+		if(k & 1){
+			repr[c] = '1';
+		} else {
+			repr[c] = '0';
+		}
+	}
+	repr[16] = '\0';
+}
 
 int main(int argc, char **argv){
     debug_print("main: Empieza el programa\n");
@@ -30,7 +45,7 @@ int main(int argc, char **argv){
 	char* lista[10];
 	int cont = 0;
     Cola cola = initCola();
-    addr dir_act = 0;
+    addr dir_act = ORIG;
     while(tieneProximoEscaner(lector)){
 		char* linea = nextEscaner(lector);
 		debug_print("parseando linea \"%s\"\n", linea);
@@ -38,13 +53,15 @@ int main(int argc, char **argv){
 		int c_tokens = parsearTokens(linea, tokens);
 		debug_print("encontro %i tokens\n", c_tokens);
 		if (c_tokens == 0){
+			free(linea);
 			continue;
 		}
 		
-		InstruccionProcesador opcode = deString(tokens[0]);
+		Instruccion opcode = deString(tokens[0]);
 		Argumento* args = NULL;
+		int argc = 0;
 		
-		if(opcode == NULL){
+		if(opcode == NULL_INS){
 			if (!(c_tokens == 2 || c_tokens == 3)){
 				// Manejo de Error
 				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 2-3 pero encontro %i\n", linea, c_tokens);
@@ -55,13 +72,13 @@ int main(int argc, char **argv){
 			insertSymTable(tabla, tokens[0], dir_act);
 			lista[cont++] = tokens[0];
 			opcode = deString(tokens[1]);
-			if (opcode == NULL){
+			if (opcode == NULL_INS){
 				// Manejo de Error
 				fprintf(stderr, "Sintaxis invalida, esperaba una instruccion pero encontro %s", tokens[1]);
 				exit(1);
 			}
 			if(c_tokens == 3) {
-				args = parsearArgumentos(tokens[2]);
+				args = parsearArgumentos(tokens[2], &argc);
 			}		
 		} else {
 			if (!(c_tokens == 1 || c_tokens == 2)){
@@ -70,22 +87,24 @@ int main(int argc, char **argv){
 				exit(1);
 			}
 			if (c_tokens == 2){
-				args = parsearArgumentos(tokens[1]);	
+				args = parsearArgumentos(tokens[1], &argc);	
 			}
 		}
 		
-        Instruccion ins = initInstruccion(opcode, args);
-        pushCola(cola, ins);
+        Operacion op = initOperacion(opcode, args, argc);
+        pushCola(cola, op);
         free(linea);
         dir_act++;
     }
 
-	for(int i = 0; i < cont; i++){
-		debug_print("%s: %i\n", lista[i], searchSymTable(tabla, lista[i]));
+	char str[17];
+	for(int pos = ORIG; pos < cont; pos++){
+		debug_print("%s: %i\n", lista[pos], searchSymTable(tabla, lista[pos]));
+		Operacion op = popCola(cola);
+		bin traduccion = traducirOperacion(op, tabla, ORIG, pos);
+		comoStr(traduccion, str);
+		debug_print("%s\n", str);
 	}
     debug_print("Se pushearon %i instrucciones\n", lengthCola(cola));
-
-
-
 
 }

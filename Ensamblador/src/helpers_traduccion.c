@@ -20,12 +20,10 @@ void checkArgs(Operacion op){
     for (int i = 0; i < c_esperado; i++){
         if (esperado[i] != args[i]->tipo){
             // Manejo de Error
-            fprintf(stderr, "Argumentos invalidos para operacion %i. en la posicion %i, esperaba tipo %i pero recibio tipo %i\n", ins, i+1, esperado[i], args[i]);
+            fprintf(stderr, "Argumentos invalidos para operacion %i. en la posicion %i, esperaba tipo %i pero recibio tipo %i\n", ins, i+1, esperado[i], args[i]->tipo);
             exit(1);
         }
     }
-
-    return true;
 }
 
 bin shiftReg(Registro r, unsigned int pos){
@@ -38,7 +36,8 @@ bin shiftReg(Registro r, unsigned int pos){
     return n << (pos-2);
 }
 
-bin formatNum(unsigned int* n, unsigned int size){
+
+bin _formatNum(unsigned int n, unsigned int size){
     if(size > 12){
         // Manejo de Error
         fprintf(stderr, "formato de numero demasiado largo: %i bits\n", size);
@@ -46,19 +45,24 @@ bin formatNum(unsigned int* n, unsigned int size){
     }
     if (size == 0){
         // Manejo de Error
-        fprintf(stderr, "formato de numero de largo 0 no tiene sentido\n", size);
+        fprintf(stderr, "formato de numero de largo 0 no tiene sentido\n");
         exit(1);
     }
     
-    int max_val = (2^size) - 1;
-    if (*n > max_val){
+    unsigned int max_val = (2^size) - 1;
+    if (n > max_val){
         // Manejo de Error
-        fprintf(stderr, "Valor fuera de rango. esperaba 0-%i pero recibio %i\n", max_val, *n);
+        fprintf(stderr, "Valor fuera de rango. esperaba 0-%i pero recibio %i\n", max_val, n);
         exit(1);
     }
 
-    return (bin) *n;
+    return (bin) n;
 }
+
+bin formatNum(unsigned int* n, unsigned int size){
+	return _formatNum(*n, size);
+}
+
 
 bin formatSHNum(unsigned int* SH, unsigned int* n){
     if (*SH > 4){
@@ -73,7 +77,7 @@ bin formatSHNum(unsigned int* SH, unsigned int* n){
 bin solveRelReference(SymTable table, addr orig, addr pos, char label[], unsigned int size){
     addr dest = orig + searchSymTable(table, label);
     addr offset = dest - pos - 1;
-    return formatNum(offset, size);
+    return _formatNum(offset, size);
 }
 
 bin traducirADD(Operacion op, SymTable tabla, addr orig, addr pos){
@@ -148,7 +152,7 @@ bin traducirRETI(Operacion op, SymTable tabla, addr orig, addr pos){
 
 bin traducirNOT(Operacion op, SymTable tabla, addr orig, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11), shiftReg(op->args[1]->valor, 8);
+    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8);
 }
 
 bin traducirJAL(Operacion op, SymTable tabla, addr orig, addr pos){
@@ -158,12 +162,12 @@ bin traducirJAL(Operacion op, SymTable tabla, addr orig, addr pos){
 
 bin traducirLD(Operacion op, SymTable tabla, addr orig, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11), solveRelReference(tabla, orig, pos, op->args[1]->valor, 9);
+    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, orig, pos, op->args[1]->valor, 9);
 }
 
 bin traducirST(Operacion op, SymTable tabla, addr orig, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11), solveRelReference(tabla, orig, pos, op->args[1]->valor, 9);
+    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, orig, pos, op->args[1]->valor, 9);
 }
 
 bin traducirLDR(Operacion op, SymTable tabla, addr orig, addr pos){

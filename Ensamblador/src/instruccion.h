@@ -23,7 +23,8 @@ enum __instruccion{
     STR,
     LUI,
     LORI,
-    LJMP
+    LJMP,
+    NULL_INS
 };
 
 typedef enum __instruccion Instruccion;
@@ -33,3 +34,5 @@ Instruccion deString(char token[]);
 int conseguirArgsTipo(Instruccion ins, int args[5]);
 
 bin conseguirBase(Instruccion ins);
+
+Traductor conseguirTraduccion(Instruccion ins);

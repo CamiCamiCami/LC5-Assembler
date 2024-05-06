@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdbool.h>
-
-typedef FILE* Escaner;
+#include "utils.h"
 
 Escaner initEscaner(char path[]);
 

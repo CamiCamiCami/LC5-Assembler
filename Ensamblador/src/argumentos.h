@@ -1,21 +1,8 @@
-
-struct __registro{
-    unsigned char NUMERO:3, __unused:5;
-};
-typedef struct __registro *Registro;
-
-struct __argumento {
-    // tipo = 1 -> int*     (Numero constante)
-    // tipo = 2 -> Registro (Registro 0-7)
-    // tipo = 3 -> char*    (Etiqueta)
-    unsigned char tipo;
-    void* valor;
-};
-typedef struct __argumento *Argumento;
+#include "utils.h"
 
 Argumento initArgumento(int tipo, void* valor);
 
-Argumento* parsearArgumentos(char raw[]);
+Argumento* parsearArgumentos(char raw[], int* argc);
 
 void freeArgumento(Argumento arg);
 

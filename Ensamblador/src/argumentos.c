@@ -4,6 +4,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdbool.h>
+#include "utils.h"
 
 #define DEBUG 0
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
@@ -80,7 +81,7 @@ Argumento _parsearArgumento(char token[]){
     return initArgumentoEtiqueta(token);
 }
 
-Argumento* parsearArgumentos(char raw[]){
+Argumento* parsearArgumentos(char raw[], int* argc){
     debug_print("parsearArgumentos: Parseando %s\n", raw);
     const int MAX_TOKENS = 5;
     char* tokens[MAX_TOKENS];
@@ -101,6 +102,7 @@ Argumento* parsearArgumentos(char raw[]){
         args[i] = _parsearArgumento(tokens[i]);
     }
     debug_print("parsearArgumentos: Tokens parseados\n");
+	*argc = c_tokens;
     return args;
 }
 

@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "utils.h"
 
+
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
@@ -16,8 +17,8 @@ Operacion initOperacion(Instruccion ins, Argumento* args, int argc){
     return op;
 }
 
-bin traducirOperacion(Operacion ins){
-    return 0;
+bin traducirOperacion(Operacion op, SymTable tabla, addr orig, addr pos){
+    return (conseguirTraduccion(op->ins))(op, tabla, orig, pos);
 }
 
 
