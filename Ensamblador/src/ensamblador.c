@@ -16,6 +16,7 @@ char *interpreta_args(int argc, char **argv){
     return argv[1];
 }
 
+#define TABLE_SIZE 11
 
 int main(int argc, char **argv){
     debug_print("main: Empieza el programa\n");
@@ -25,9 +26,11 @@ int main(int argc, char **argv){
     debug_print("main: Tenemos el lector, %p\n", lector);
     
 
-	
+	SymTable tabla = initSymTable(TABLE_SIZE);
+	char* lista[10];
+	int cont = 0;
     Cola cola = initCola();
-    unsigned short dir_act = 0;
+    addr dir_act = 0;
     while(tieneProximoEscaner(lector)){
 		char* linea = nextEscaner(lector);
 		debug_print("parseando linea \"%s\"\n", linea);
@@ -38,10 +41,10 @@ int main(int argc, char **argv){
 			continue;
 		}
 		
-		int opcode = comoOpcodeToken(tokens[0]);
+		InstruccionProcesador opcode = deString(tokens[0]);
 		Argumento* args = NULL;
 		
-		if(opcode == 0){
+		if(opcode == NULL){
 			if (!(c_tokens == 2 || c_tokens == 3)){
 				// Manejo de Error
 				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 2-3 pero encontro %i\n", linea, c_tokens);
@@ -49,8 +52,10 @@ int main(int argc, char **argv){
 			}
 			
 			debug_print("etiqueta %s en direccion %i\n", tokens[0], dir_act);
-			opcode = comoOpcodeToken(tokens[1]);
-			if (opcode == 0){
+			insertSymTable(tabla, tokens[0], dir_act);
+			lista[cont++] = tokens[0];
+			opcode = deString(tokens[1]);
+			if (opcode == NULL){
 				// Manejo de Error
 				fprintf(stderr, "Sintaxis invalida, esperaba una instruccion pero encontro %s", tokens[1]);
 				exit(1);
@@ -75,6 +80,12 @@ int main(int argc, char **argv){
         dir_act++;
     }
 
-
+	for(int i = 0; i < cont; i++){
+		debug_print("%s: %i\n", lista[i], searchSymTable(tabla, lista[i]));
+	}
     debug_print("Se pushearon %i instrucciones\n", lengthCola(cola));
+
+
+
+
 }

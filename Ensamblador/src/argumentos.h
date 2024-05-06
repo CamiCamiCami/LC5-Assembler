@@ -4,10 +4,6 @@ struct __registro{
 };
 typedef struct __registro *Registro;
 
-#define TIPO_NUMERO 1
-#define TIPO_REGISTRO 2
-#define TIPO_ETIQUETA 3
-
 struct __argumento {
     // tipo = 1 -> int*     (Numero constante)
     // tipo = 2 -> Registro (Registro 0-7)

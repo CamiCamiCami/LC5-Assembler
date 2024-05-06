@@ -1,10 +1,11 @@
 #include "argumentos.h"
+#include "enum_instrucciones.h"
 
 struct __instruccion{
-    unsigned char OPCODE;
+    InstruccionProcesador INS;
     Argumento* args;
     int argc;
 };
 typedef struct __instruccion *Instruccion;
 
-Instruccion initInstruccion(int opcode, Argumento* args);
+Instruccion initInstruccion(InstruccionProcesador ins, Argumento* args);
