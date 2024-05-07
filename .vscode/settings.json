@@ -4,6 +4,7 @@
         "argumentos.h": "c",
         "symtable.h": "c",
         "stdlib.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "ensamblador.h": "c"
     }
 }

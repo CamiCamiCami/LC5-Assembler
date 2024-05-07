@@ -1,13 +1,13 @@
 #include "../utils.h"
 
-Symbol initSymbol(char* label, addr address);
+Symbol initSymbol(char* label, int address);
 
 char* getLabel(Symbol sym);
 
 Symbol setLabel(Symbol sym, char* label);
 
-addr getAddress(Symbol sym);
+int getAddress(Symbol sym);
 
-Symbol setAddress(Symbol sym, addr address);
+Symbol setAddress(Symbol sym, int address);
 
 void freeSymbol(Symbol sym);

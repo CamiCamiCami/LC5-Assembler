@@ -1,9 +1,9 @@
 #include "symbol.h"
 #include <string.h>
 
-Symbol initSymbol(char* label, addr address){
+Symbol initSymbol(char* label, int address){
     Symbol sym = malloc(sizeof(struct __symbol));
-    char* label_cpy = malloc(sizeof(char) * strlen(label));
+    char* label_cpy = malloc(sizeof(char) * (strlen(label) + 1));
     strcpy(label_cpy, label);
     sym->label = label_cpy;
     sym->address = address;
@@ -22,11 +22,11 @@ Symbol setLabel(Symbol sym, char* label){
     return sym;
 }
 
-addr getAddress(Symbol sym){
+int getAddress(Symbol sym){
     return sym->address;
 }
 
-Symbol setAddress(Symbol sym, addr address){
+Symbol setAddress(Symbol sym, int address){
     sym->address = address;
     return sym;
 }

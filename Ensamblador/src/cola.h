@@ -9,4 +9,6 @@ void* popCola(Cola cola);
 
 int lengthCola(Cola cola);
 
+bool emptyCola(Cola cola);
+
 void freeCola(Cola cola);

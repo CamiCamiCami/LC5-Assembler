@@ -1,6 +1,6 @@
 #include "utils.h"
 
-int parsearTokens(char linea[], Token* tokens);
+Token* parsearTokens(char linea[], int* c_tkn);
 
 Token initToken(char token[]);
 

@@ -27,7 +27,7 @@ SymTable initSymTable(int largo){
     return tabla;
 } 
 
-SymTable insertSymTable(SymTable tabla, char* llave, addr dato){
+SymTable insertSymTable(SymTable tabla, char* llave, int dato){
     int idx = hash(llave, strlen(llave)) % tabla->largo;
     tabla->array[idx] = insertSymList(tabla->array[idx], llave, dato);
     return tabla;
@@ -39,7 +39,7 @@ SymTable removeSymTable(SymTable tabla, char* llave){
     return tabla;
 }
 
-addr searchSymTable(SymTable tabla, char* llave){
+int searchSymTable(SymTable tabla, char* llave){
     int idx = hash(llave, strlen(llave)) % tabla->largo;
     return searchSymList(tabla->array[idx], llave);
 }

@@ -78,3 +78,7 @@ void freeCola(Cola cola){
 
     free(cola);
 }
+
+bool emptyCola(Cola cola) {
+    return (cola->cabeza == NULL && cola->fin == NULL);
+}

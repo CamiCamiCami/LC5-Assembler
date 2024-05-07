@@ -19,20 +19,6 @@ char *interpreta_args(int argc, char **argv){
 #define TABLE_SIZE 11
 #define ORIG 3000
 
-void comoStr(bin word, char repr[17]){
-	bin k;
-	for(int c = 15; c >= 0; c--){
-		k = word >> c;
-
-		if(k & 1){
-			repr[c] = '1';
-		} else {
-			repr[c] = '0';
-		}
-	}
-	repr[16] = '\0';
-}
-
 int main(int argc, char **argv){
     debug_print("main: Empieza el programa\n");
     char* path = interpreta_args(argc, argv);
@@ -45,66 +31,82 @@ int main(int argc, char **argv){
 	char* lista[10];
 	int cont = 0;
     Cola cola = initCola();
-    addr dir_act = ORIG;
-    while(tieneProximoEscaner(lector)){
+    for(unsigned int n_linea = 0; tieneProximoEscaner(lector);){
 		char* linea = nextEscaner(lector);
-		debug_print("parseando linea \"%s\"\n", linea);
-		Token tokens[3];
-		int c_tokens = parsearTokens(linea, tokens);
-		debug_print("encontro %i tokens\n", c_tokens);
-		if (c_tokens == 0){
+		debug_print("main: Parseando linea -%s-\n", linea);
+		int c_tkns;
+		Token* tkns = parsearTokens(linea, &c_tkns);
+	    for (int i = 0; i < c_tkns; i++){
+        	debug_print("main: Tokens[%i] = %s\n", i, tkns[i]);
+    	}
+		debug_print("main: Encontro %i tokens\n", c_tkns);
+		
+		if (c_tkns == 0){
+			debug_print("main: linea vacia, saltada\n");
 			free(linea);
+			for (int i = 0; i < c_tkns; i++)
+				free(tkns[i]);
+			free(tkns);
 			continue;
 		}
 		
-		Instruccion opcode = deString(tokens[0]);
+		Instruccion opcode = deString(tkns[0]);
 		Argumento* args = NULL;
 		int argc = 0;
 		
 		if(opcode == NULL_INS){
-			if (!(c_tokens == 2 || c_tokens == 3)){
+			if (!(c_tkns == 2 || c_tkns == 3)){
 				// Manejo de Error
-				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 2-3 pero encontro %i\n", linea, c_tokens);
+				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 2-3 pero encontro %i\n", linea, c_tkns);
 				exit(1);
 			}
 			
-			debug_print("etiqueta %s en direccion %i\n", tokens[0], dir_act);
-			insertSymTable(tabla, tokens[0], dir_act);
-			lista[cont++] = tokens[0];
-			opcode = deString(tokens[1]);
+			debug_print("main: etiqueta %s en linea %i\n", tkns[0], n_linea);
+			insertSymTable(tabla, tkns[0], n_linea);
+			char* ptr = malloc(sizeof(char) * (strlen(tkns[0]) + 1));
+			strcpy(ptr, tkns[0]);
+			lista[cont++] = ptr;
+			opcode = deString(tkns[1]);
 			if (opcode == NULL_INS){
 				// Manejo de Error
-				fprintf(stderr, "Sintaxis invalida, esperaba una instruccion pero encontro %s", tokens[1]);
+				fprintf(stderr, "Sintaxis invalida, esperaba una instruccion pero encontro %s\n", tkns[1]);
 				exit(1);
 			}
-			if(c_tokens == 3) {
-				args = parsearArgumentos(tokens[2], &argc);
+			if(c_tkns == 3) {
+				args = parsearArgumentos(tkns[2], &argc);
 			}		
 		} else {
-			if (!(c_tokens == 1 || c_tokens == 2)){
+			if (!(c_tkns == 1 || c_tkns == 2)){
 				// Manejo de Error
-				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 1-2 pero encontro %i\n", linea, c_tokens);
+				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 1-2 pero encontro %i\n", linea, c_tkns);
 				exit(1);
 			}
-			if (c_tokens == 2){
-				args = parsearArgumentos(tokens[1], &argc);	
+			if (c_tkns == 2){
+				args = parsearArgumentos(tkns[1], &argc);	
 			}
 		}
 		
         Operacion op = initOperacion(opcode, args, argc);
         pushCola(cola, op);
         free(linea);
-        dir_act++;
+		for (int i = 0; i < c_tkns; i++)
+			free(tkns[i]);
+		free(tkns);
+		n_linea++;
     }
 
+    debug_print("main: Se pushearon %i instrucciones\n", lengthCola(cola));
+
+	for(int i = 0; i < cont; i++){
+		debug_print("main: %s: %i\n", lista[i], searchSymTable(tabla, lista[i]));
+		free(lista[i]);
+	}
+
 	char str[17];
-	for(int pos = ORIG; pos < cont+ORIG; pos++){
-		debug_print("%s: %i\n", lista[pos], searchSymTable(tabla, lista[pos]));
+	for(int pos = ORIG; !emptyCola(cola); pos++){
 		Operacion op = popCola(cola);
 		bin traduccion = traducirOperacion(op, tabla, ORIG, pos);
 		comoStr(traduccion, str);
-		debug_print("%s\n", str);
+		debug_print("main: %s\n", str);
 	}
-    debug_print("Se pushearon %i instrucciones\n", lengthCola(cola));
-
 }

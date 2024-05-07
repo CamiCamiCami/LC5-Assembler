@@ -14,7 +14,7 @@ bool emptySymList(SymList map){
     return map == NULL;
 }
 
-SymList insertSymList(SymList map, char* llave, addr dato){
+SymList insertSymList(SymList map, char* llave, int dato){
     if (emptySymList(map)){
         Symbol sym = initSymbol(llave, dato);
         SymList nodo = malloc(sizeof(struct __symbol_list));
@@ -43,9 +43,9 @@ SymList removeSymList(SymList map, char* llave){
     }
 }
 
-addr searchSymList(SymList map, char* llave){
+int searchSymList(SymList map, char* llave){
     if (emptySymList(map)){
-        return (addr) 0;
+        return -1;
     } else if (strcmp(llave, LLAVE(map)) == 0) {
         return DATO(map);
     } else {

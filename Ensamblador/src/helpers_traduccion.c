@@ -3,6 +3,9 @@
 #include "instruccion.h"
 #include "symtable/symtable.h"
 
+#define DEBUG 1
+#define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
+
 void checkArgs(Operacion op){
     Instruccion ins = op->ins;
     Argumento* args = op->args;
@@ -13,14 +16,18 @@ void checkArgs(Operacion op){
 
     if(c_arg != c_esperado){
         // Manejo de Error
-        fprintf(stderr, "Argumentos invalidos para opracion %i. Esperaba %i argumento/s pero recibio %i\n", ins, c_esperado, c_arg);
+        char str[5];
+        comoStringInstruccion(op->ins, str);
+        fprintf(stderr, "Argumentos invalidos para opracion %s. Esperaba %i argumento/s pero recibio %i\n", str, c_esperado, c_arg);
         exit(1);
     }
 
     for (int i = 0; i < c_esperado; i++){
         if (esperado[i] != args[i]->tipo){
             // Manejo de Error
-            fprintf(stderr, "Argumentos invalidos para operacion %i. en la posicion %i, esperaba tipo %i pero recibio tipo %i\n", ins, i+1, esperado[i], args[i]->tipo);
+            char str[5];
+            comoStringInstruccion(op->ins, str);
+            fprintf(stderr, "Argumentos invalidos para operacion %s. en la posicion %i, esperaba tipo %i pero recibio tipo %i\n", str, i+1, esperado[i], args[i]->tipo);
             exit(1);
         }
     }
@@ -37,7 +44,7 @@ bin shiftReg(Registro r, unsigned int pos){
 }
 
 
-bin _formatNum(unsigned int n, unsigned int size){
+bin _formatNum(int n, unsigned int size){
     if(size > 12){
         // Manejo de Error
         fprintf(stderr, "formato de numero demasiado largo: %i bits\n", size);
@@ -49,10 +56,12 @@ bin _formatNum(unsigned int n, unsigned int size){
         exit(1);
     }
     
-    unsigned int max_val = (2^size) - 1;
-    if (n > max_val){
+    int max_val = (1 << (size-1U)) - 1; // 2^(size-1) - 1
+    int min_val = -(1 << (size-1U));
+
+    if (n < min_val || max_val < n){
         // Manejo de Error
-        fprintf(stderr, "Valor fuera de rango. esperaba 0-%i pero recibio %i\n", max_val, n);
+        fprintf(stderr, "Valor fuera de rango. esperaba (%i)-(%i) pero recibio %i\n", min_val, max_val, n);
         exit(1);
     }
 
@@ -75,8 +84,19 @@ bin formatSHNum(unsigned int* SH, unsigned int* n){
 }
 
 bin solveRelReference(SymTable table, addr orig, addr pos, char label[], unsigned int size){
-    addr dest = orig + searchSymTable(table, label);
-    addr offset = dest - pos - 1;
+    int label_offset = searchSymTable(table, label);
+    if (label_offset < 0){
+        // Manejo de Error
+        fprintf(stderr, "No pudo resolver refenecia a %s\n", label);
+        exit(1);
+    }
+    addr dest = orig + label_offset;
+    int offset = dest - pos - 1;
+    debug_print("solveRelReference: dest = (orig = %u) + (table[%s] = %u) = %u\n", orig, label, searchSymTable(table, label), dest);
+    debug_print("solveRelReference: offset = (dest = %u) - (pos = %u) = %i\n", dest, pos, offset);
+    char str[17];
+    comoStr(_formatNum(offset, size), str);
+    debug_print("solveRelReference: %s\n", str);
     return _formatNum(offset, size);
 }
 

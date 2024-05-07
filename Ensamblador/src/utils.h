@@ -64,7 +64,7 @@ struct __cola {
 
 struct __symbol {
     char* label;
-    unsigned short address;
+    short address;
 };
 
 struct __symbol_list {
@@ -92,6 +92,7 @@ typedef unsigned short bin;
 typedef unsigned short addr;
 typedef bin (*Traductor)(Operacion, SymTable, addr, addr);
 
-
+void comoStr(bin bin, char str[17]);
+void intComoStr(int word, char repr[33]);
 
 #endif 
