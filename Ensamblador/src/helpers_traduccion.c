@@ -1,6 +1,6 @@
+#include "helpers_traduccion.h"
 #include "operacion.h"
-#include <stdio.h>
-#include <stdbool.h>
+#include "instruccion.h"
 #include "symtable/symtable.h"
 
 void checkArgs(Operacion op){

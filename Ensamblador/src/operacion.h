@@ -1,5 +1,4 @@
-#include "argumentos.h"
-#include "instruccion.h"
+#include "utils.h"
 
 struct __operacion{
     Instruccion ins;

@@ -1,5 +1,4 @@
-typedef char* Token;
-
+#include "utils.h"
 
 int parsearTokens(char linea[], Token* tokens);
 

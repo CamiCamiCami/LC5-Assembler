@@ -1,9 +1,4 @@
 #include "tokens.h"
-#include "utils.h"
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <ctype.h>
 
 bool esEspacio(char c){

@@ -1,10 +1,5 @@
-#include <stdlib.h>
-#include "symlist.h"
+#include "../utils.h"
 
-struct __symtable{
-    SymList* array;
-    int largo;
-};
 
 SymTable initSymTable(int largo);
 

@@ -1,9 +1,5 @@
 #include "instruccion.h"
-#include "utils.h"
-#include <stdio.h>
 #include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
 #include "helpers_traduccion.h"
 
 #define CANT_CODIGOS_INS 23
@@ -19,7 +15,7 @@ Instruccion deString(char token[]){
             return i+1;
         }
     }
-    return 0;
+    return NULL_INS;
 }
 
 int conseguirArgsTipo(Instruccion INS, int args[5]){

@@ -98,7 +98,7 @@ int main(int argc, char **argv){
     }
 
 	char str[17];
-	for(int pos = ORIG; pos < cont; pos++){
+	for(int pos = ORIG; pos < cont+ORIG; pos++){
 		debug_print("%s: %i\n", lista[pos], searchSymTable(tabla, lista[pos]));
 		Operacion op = popCola(cola);
 		bin traduccion = traducirOperacion(op, tabla, ORIG, pos);

@@ -1,5 +1,5 @@
 #include "symtable.h"
-#include <string.h>
+#include "symlist.h"
 
 #define DEFAULT_SEED 61
 
@@ -19,7 +19,7 @@ unsigned int hash(const char* in, size_t len)
 }
 
 SymTable initSymTable(int largo){
-    SymTable tabla = malloc(sizeof(struct __symtable));
+    SymTable tabla = malloc(sizeof(struct __symbol_table));
     tabla->array = malloc(sizeof(SymList) * largo);
     for(int i = 0; i < largo; i++)
         tabla->array[i] = initSymList();

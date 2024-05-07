@@ -1,5 +1,5 @@
 #include "symlist.h"
-#include <string.h>
+#include "symbol.h"
 
 #define LLAVE(t) getLabel(t->symbol)
 #define DATO(t) getAddress(t->symbol)

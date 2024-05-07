@@ -1,9 +1,5 @@
 #include "operacion.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-#include "utils.h"
+#include "instruccion.h"
 
 
 #define DEBUG 1
@@ -18,7 +14,7 @@ Operacion initOperacion(Instruccion ins, Argumento* args, int argc){
 }
 
 bin traducirOperacion(Operacion op, SymTable tabla, addr orig, addr pos){
-    return (conseguirTraduccion(op->ins))(op, tabla, orig, pos);
+    return (conseguirTraductor(op->ins))(op, tabla, orig, pos);
 }
 
 

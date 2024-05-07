@@ -3,10 +3,40 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define TIPO_NUMERO 1
 #define TIPO_REGISTRO 2
 #define TIPO_ETIQUETA 3
+
+
+enum __instruccion{
+	ADD = 1,
+    SUB,
+    AND,
+    OR,
+    ADDI,
+    ANDI,
+    ORI,
+    BRp,
+    BRz,
+    BRn,
+    JR,
+    JALR,
+    TRAP,
+    RETI,
+    NOT,
+    JAL,         
+    LD,                                          
+    ST,
+    LDR,
+    STR,
+    LUI,
+    LORI,
+    LJMP,
+    NULL_INS
+};
 
 struct __registro{
      unsigned char NUMERO:3, __unused:5;
@@ -32,6 +62,23 @@ struct __cola {
     struct __cola_nodo* fin;
 };
 
+struct __symbol {
+    char* label;
+    unsigned short address;
+};
+
+struct __symbol_list {
+    struct __symbol* symbol;
+    struct __symbol_list* sig;
+};
+
+struct __symbol_table{
+    struct __symbol_list** array;
+    int largo;
+};
+
+typedef char* Token;
+typedef enum __instruccion Instruccion;
 typedef FILE* Escaner;
 typedef struct __cola_nodo* ColaNodo;
 typedef struct __cola* Cola;

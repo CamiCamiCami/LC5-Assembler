@@ -1,10 +1,5 @@
-#include <stdbool.h>
-#include "symbol.h"
+#include "../utils.h"
 
-struct __symbol_list {
-    Symbol symbol;
-    SymList sig;
-};
 
 SymList initSymList();
 

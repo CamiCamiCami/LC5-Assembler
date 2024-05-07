@@ -1,10 +1,4 @@
-#include <stdlib.h>
 #include "../utils.h"
-
-struct __symbol {
-    char* label;
-    addr address;
-};
 
 Symbol initSymbol(char* label, addr address);
 
