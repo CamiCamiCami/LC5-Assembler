@@ -17,7 +17,8 @@ char *interpreta_args(int argc, char **argv){
 }
 
 #define TABLE_SIZE 11
-#define ORIG 3000
+#define ORIG (short) 3000
+#define ARCHIVO_SALIDA "../obj/codigo.bin"
 
 int main(int argc, char **argv){
     debug_print("main: Empieza el programa\n");
@@ -28,7 +29,7 @@ int main(int argc, char **argv){
     
 
 	SymTable tabla = initSymTable(TABLE_SIZE);
-	char* lista[10];
+	char* lista[30];
 	int cont = 0;
     Cola cola = initCola();
     for(unsigned int n_linea = 0; tieneProximoEscaner(lector);){
@@ -102,11 +103,20 @@ int main(int argc, char **argv){
 		free(lista[i]);
 	}
 
+
+	FILE* f = fopen(ARCHIVO_SALIDA, "wr");
+	short pos = ORIG;
+	fwrite(&pos, sizeof(short), 1, f);
 	char str[17];
-	for(int pos = ORIG; !emptyCola(cola); pos++){
+	for(; !emptyCola(cola); pos++){
 		Operacion op = popCola(cola);
 		bin traduccion = traducirOperacion(op, tabla, ORIG, pos);
+		fwrite(&traduccion, sizeof(bin), 1, f);
 		comoStr(traduccion, str);
 		debug_print("main: %s\n", str);
+		free(op);
 	}
+	fclose(f);
+
+	return 0;
 }

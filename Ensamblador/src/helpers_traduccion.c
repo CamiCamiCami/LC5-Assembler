@@ -3,7 +3,7 @@
 #include "instruccion.h"
 #include "symtable/symtable.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
 void checkArgs(Operacion op){
@@ -47,7 +47,7 @@ bin shiftReg(Registro r, unsigned int pos){
 
 
 bin _formatNum(short n, unsigned int size){
-    if(size > 12){
+    if(size > 16){
         // Manejo de Error
         fprintf(stderr, "formato de numero demasiado largo: %i bits\n", size);
         exit(1);
@@ -58,6 +58,7 @@ bin _formatNum(short n, unsigned int size){
         exit(1);
     }
     
+    /*
     short max_val = (1 << (size-1U)) - 1; // 2^(size-1) - 1
     short min_val = -(1 << (size-1U));
 
@@ -66,6 +67,7 @@ bin _formatNum(short n, unsigned int size){
         fprintf(stderr, "Valor fuera de rango. esperaba (%i)-(%i) pero recibio %i\n", min_val, max_val, n);
         exit(1);
     }
+    */
 
     bin mask = 0b1111111111111111 >> (16-size);
     bin res = mask & n;
@@ -210,12 +212,12 @@ bin traducirSTR(Operacion op, SymTable tabla, addr orig, addr pos){
 
 bin traducirLUI(Operacion op, SymTable tabla, addr orig, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, orig, pos, op->args[1]->valor, 8);
+    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
 bin traducirLORI(Operacion op, SymTable tabla, addr orig, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, orig, pos, op->args[1]->valor, 8);
+    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
 bin traducirLJMP(Operacion op, SymTable tabla, addr orig, addr pos){

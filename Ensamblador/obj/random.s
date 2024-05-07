@@ -12,8 +12,8 @@ sumai1      addi    r1,r7,#12
 sumai2      addi    r1,r7,b101010
 sumai3      addi    r1,r7,x3F
 sumai4      addi    r1,r7,-1
-ylogi       andi    r1,r2,2,0b1111
-ologi       ori     r1,r2,1,0b0000
+ylogi       andi    r1,r2,2,b1111
+ologi       ori     r1,r2,1,b1111
 bran        brp     suma
             brZ     load
             brn     bran
