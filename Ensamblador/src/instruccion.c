@@ -6,7 +6,7 @@
 static const char CODIGOS_INSTRUCCION[CANT_CODIGOS_INS][5] = {"add", "sub", "and", "or", "addi", "andi", "ori", "brp", "brz", "brn", "jr", "jalr", "trap", "reti", "not", "jal", "ld", "st", "str", "ldr", "lui", "lori", "ljmp"};
 
 void comoStringInstruccion(Instruccion ins, char str[5]){
-    char* codigo = CODIGOS_INSTRUCCION[ins-1];
+    const char* codigo = CODIGOS_INSTRUCCION[ins-1];
     int i = 0;
     for (; codigo[i]; i++){
         str[i] = codigo[i];

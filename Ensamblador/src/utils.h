@@ -94,5 +94,6 @@ typedef bin (*Traductor)(Operacion, SymTable, addr, addr);
 
 void comoStr(bin bin, char str[17]);
 void intComoStr(int word, char repr[33]);
+void argTipoComoStr(unsigned char tipo, char repr[10]);
 
 #endif 

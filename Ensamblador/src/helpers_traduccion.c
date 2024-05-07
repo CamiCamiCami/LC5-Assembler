@@ -25,9 +25,11 @@ void checkArgs(Operacion op){
     for (int i = 0; i < c_esperado; i++){
         if (esperado[i] != args[i]->tipo){
             // Manejo de Error
-            char str[5];
-            comoStringInstruccion(op->ins, str);
-            fprintf(stderr, "Argumentos invalidos para operacion %s. en la posicion %i, esperaba tipo %i pero recibio tipo %i\n", str, i+1, esperado[i], args[i]->tipo);
+            char str_ins[5], str_esperado[10], str_recibido[10];
+            comoStringInstruccion(op->ins, str_ins);
+            argTipoComoStr(esperado[i], str_esperado);
+            argTipoComoStr(args[i]->tipo, str_recibido);
+            fprintf(stderr, "Argumentos invalidos para operacion %s. en la posicion %i, esperaba tipo %s pero recibio tipo %s\n", str_ins, i+1, str_esperado, str_recibido);
             exit(1);
         }
     }
@@ -44,7 +46,7 @@ bin shiftReg(Registro r, unsigned int pos){
 }
 
 
-bin _formatNum(int n, unsigned int size){
+bin _formatNum(short n, unsigned int size){
     if(size > 12){
         // Manejo de Error
         fprintf(stderr, "formato de numero demasiado largo: %i bits\n", size);
@@ -56,8 +58,8 @@ bin _formatNum(int n, unsigned int size){
         exit(1);
     }
     
-    int max_val = (1 << (size-1U)) - 1; // 2^(size-1) - 1
-    int min_val = -(1 << (size-1U));
+    short max_val = (1 << (size-1U)) - 1; // 2^(size-1) - 1
+    short min_val = -(1 << (size-1U));
 
     if (n < min_val || max_val < n){
         // Manejo de Error
@@ -65,22 +67,31 @@ bin _formatNum(int n, unsigned int size){
         exit(1);
     }
 
-    return (bin) n;
+    bin mask = 0b1111111111111111 >> (16-size);
+    bin res = mask & n;
+    char str[17];
+    comoStr(res, str);
+    debug_print("_formatNum: %s\n", str);
+    return res;
 }
 
-bin formatNum(unsigned int* n, unsigned int size){
+bin formatNum(short* n, unsigned int size){
 	return _formatNum(*n, size);
 }
 
 
-bin formatSHNum(unsigned int* SH, unsigned int* n){
+bin formatSHNum(short* SH, short* n){
     if (*SH > 4){
         // Manejo de Error
         fprintf(stderr, "Valor de shifteo fuera de rango. esperaba 0-4 pero recibio %i\n", *SH);
         exit(1);
     }
     bin b = formatNum(n, 4);
-    return (bin)(b << *SH);
+    b = (bin)(*SH << 4) + b;
+    char str[17];
+    comoStr(b, str);
+    debug_print("formatSHNum: %s\n", str);
+    return b;
 }
 
 bin solveRelReference(SymTable table, addr orig, addr pos, char label[], unsigned int size){
@@ -91,12 +102,9 @@ bin solveRelReference(SymTable table, addr orig, addr pos, char label[], unsigne
         exit(1);
     }
     addr dest = orig + label_offset;
-    int offset = dest - pos - 1;
+    short offset = dest - pos - 1;
     debug_print("solveRelReference: dest = (orig = %u) + (table[%s] = %u) = %u\n", orig, label, searchSymTable(table, label), dest);
     debug_print("solveRelReference: offset = (dest = %u) - (pos = %u) = %i\n", dest, pos, offset);
-    char str[17];
-    comoStr(_formatNum(offset, size), str);
-    debug_print("solveRelReference: %s\n", str);
     return _formatNum(offset, size);
 }
 

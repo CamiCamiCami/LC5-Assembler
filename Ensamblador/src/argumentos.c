@@ -38,35 +38,40 @@ Argumento initArgumento(int tipo, void* valor){
 }
 
 Argumento _parsearArgumento(char token[]){
+    if (token[0] == '\0'){
+        // Manejo de Error
+        fprintf(stderr, "No se puede parsear un token vacio.\n");
+        exit(1);
+    }
     char* end;
-
+    int token_len = strlen(token);
     if(token[0] == 'r' || token[0] == 'R'){
         long r_num = strtol(token+1, &end, 10);
-        if (r_num != 0 || end[0] == '\0'){
+        if (end[0] == '\0' && token_len > 1){
             // El token es un argumento de registro
             return initArgumentoRegistro(r_num);
         }
     } else if (token[0] == 'b'){
-        long value = strtol(token+1, &end, 2);
-        if (value != 0 || end[0] == '\0'){
+        long value = (short)strtol(token+1, &end, 2);
+        if (end[0] == '\0' && token_len > 1){
             // El token es un argumento numerico
             return initArgumentoNumero(value);
         }
     } else if (token[0] == 'x'){
         long value = strtol(token+1, &end, 16);
-        if (value != 0 || end[0] == '\0'){
+        if (end[0] == '\0' && token_len > 1){
             // El token es un argumento numerico
             return initArgumentoNumero(value);
         }
     } else if (token[0] == '#'){
         long value = strtol(token+1, &end, 10);
-        if (value != 0 || end[0] == '\0'){
+        if (end[0] == '\0' && token_len > 1){
             // El token es un argumento numerico
             return initArgumentoNumero(value);
         }
     } else {
         long value = strtol(token, &end, 10);
-        if (value != 0 || end[0] == '\0'){
+        if (end[0] == '\0'){
             // El token es un argumento numerico
             return initArgumentoNumero(value);
         }
