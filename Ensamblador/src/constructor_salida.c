@@ -18,7 +18,6 @@ ConsSalida initConstructorSalida(char path[], addr orig){
     cons->contenido = NULL;
     cons->file = f;
 
-    agregarConsSalida(cons, 0b1111111111111111);
     agregarConsSalida(cons, orig);
 
     return cons;
