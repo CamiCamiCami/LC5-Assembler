@@ -67,6 +67,14 @@ struct __symbol_table{
     int largo;
 };
 
+struct __constructor_salida {
+    FILE* file;
+    int largo;
+    int alocado;
+    bin* contenido;
+};
+
+
 typedef char* Token;
 typedef enum __instruccion Instruccion;
 typedef FILE* Escaner;
@@ -76,6 +84,7 @@ typedef struct __argumento* Argumento;
 typedef struct __registro *Registro;
 typedef struct __symbol_table* SymTable;
 typedef struct __operacion* Operacion;
+typedef struct __constructor_salida* ConsSalida;
 typedef unsigned short bin;
 typedef unsigned short addr;
 typedef bin (*Traductor)(Operacion, SymTable, addr, addr);

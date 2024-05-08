@@ -104,11 +104,7 @@ int main(int argc, char **argv){
 	}
 
 	FILE* f = fopen(ARCHIVO_SALIDA, "wb");
-	if (f == NULL){
-		// Manejo de error
-		fprintf(stderr, "Se produjo un error al abrir el archivo, errno: %i\n", errno);
-		exit(1);
-	} else {
+	 else {
 		debug_print("Archivo %s abierto exitosamente\n", ARCHIVO_SALIDA);
 	}
 	
