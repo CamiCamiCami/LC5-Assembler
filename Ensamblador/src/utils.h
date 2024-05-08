@@ -62,16 +62,6 @@ struct __cola {
     struct __cola_nodo* fin;
 };
 
-struct __symbol {
-    char* label;
-    short address;
-};
-
-struct __symbol_list {
-    struct __symbol* symbol;
-    struct __symbol_list* sig;
-};
-
 struct __symbol_table{
     struct __symbol_list** array;
     int largo;
@@ -85,8 +75,6 @@ typedef struct __cola* Cola;
 typedef struct __argumento* Argumento;
 typedef struct __registro *Registro;
 typedef struct __symbol_table* SymTable;
-typedef struct __symbol_list* SymList;
-typedef struct __symbol* Symbol;
 typedef struct __operacion* Operacion;
 typedef unsigned short bin;
 typedef unsigned short addr;

@@ -5,6 +5,7 @@
         "symtable.h": "c",
         "stdlib.h": "c",
         "stdbool.h": "c",
-        "ensamblador.h": "c"
+        "ensamblador.h": "c",
+        "string.h": "c"
     }
 }

@@ -1,4 +1,4 @@
-#include "../utils.h"
+#include "utils.h"
 
 
 SymTable initSymTable(int largo);

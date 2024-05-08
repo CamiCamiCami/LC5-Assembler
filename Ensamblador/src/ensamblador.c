@@ -17,7 +17,7 @@ char *interpreta_args(int argc, char **argv){
 }
 
 #define TABLE_SIZE 11
-#define ORIG (short) 3000
+#define ORIG (addr) 3000
 #define ARCHIVO_SALIDA "../obj/codigo.bin"
 
 int main(int argc, char **argv){
@@ -103,17 +103,36 @@ int main(int argc, char **argv){
 		free(lista[i]);
 	}
 
-
-	FILE* f = fopen(ARCHIVO_SALIDA, "wr");
-	short pos = ORIG;
-	fwrite(&pos, sizeof(short), 1, f);
+	FILE* f = fopen(ARCHIVO_SALIDA, "wb");
+	if (f == NULL){
+		// Manejo de error
+		fprintf(stderr, "Se produjo un error al abrir el archivo, errno: %i\n", errno);
+		exit(1);
+	} else {
+		debug_print("Archivo %s abierto exitosamente\n", ARCHIVO_SALIDA);
+	}
+	
+	addr pos = ORIG;
+	int escritura_exitosa = fwrite(&pos, sizeof(addr), 1, f);
+	if (!escritura_exitosa){
+		// Manejo de error
+		fprintf(stderr, "Fallo al escribir al archivo, errno: %i\n", errno);
+		exit(1);
+	}
 	char str[17];
+	comoStr(ORIG, str);
+	debug_print("%s\n", str);
 	for(; !emptyCola(cola); pos++){
 		Operacion op = popCola(cola);
 		bin traduccion = traducirOperacion(op, tabla, ORIG, pos);
-		fwrite(&traduccion, sizeof(bin), 1, f);
+		int escritura_exitosa = fwrite(&traduccion, sizeof(addr), 1, f);
+		if (!escritura_exitosa){
+			// Manejo de error
+			fprintf(stderr, "Fallo al escribir al archivo, errno: %i\n", errno);
+			exit(1);
+		}
 		comoStr(traduccion, str);
-		debug_print("main: %s\n", str);
+		debug_print("%s\n", str);
 		free(op);
 	}
 	fclose(f);
