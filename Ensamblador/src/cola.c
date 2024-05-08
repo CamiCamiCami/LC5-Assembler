@@ -8,6 +8,7 @@ Cola initCola(){
     Cola nueva = malloc(sizeof(struct __cola));
     nueva->cabeza = NULL;
     nueva->fin = NULL;
+    nueva->largo = 0;
     return nueva;
 }
 
@@ -29,6 +30,8 @@ void pushCola(Cola cola, void* valor){
     if (cola->fin == NULL){
         cola->fin = nodo;
     }
+
+    cola->largo++;
 }
 
 void freeColaNodo(ColaNodo nodo){
@@ -36,7 +39,7 @@ void freeColaNodo(ColaNodo nodo){
 }
 
 void* popCola(Cola cola){
-    if (cola->fin == NULL){
+    if (cola->largo == 0){
         fprintf(stderr, "No puede hacer popCola en una cola de largo 0\n");
         exit(1);
     }
@@ -55,16 +58,12 @@ void* popCola(Cola cola){
         cola->cabeza = NULL;
         cola->fin = NULL;
     }
+    cola->largo--;
     return valor;
 }
 
 int lengthCola(Cola cola){
-    int largo = 0;
-    ColaNodo nodo = cola->cabeza;
-    for(; nodo != NULL; largo++){
-        nodo = nodo->sig;
-    }
-    return largo;
+    return cola->largo;
 }
 
 void freeCola(Cola cola){
@@ -80,5 +79,5 @@ void freeCola(Cola cola){
 }
 
 bool emptyCola(Cola cola) {
-    return (cola->cabeza == NULL && cola->fin == NULL);
+    return cola->largo == 0;
 }

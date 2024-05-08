@@ -38,6 +38,11 @@ enum __instruccion{
     NULL_INS
 };
 
+enum __seccion {
+    TEXT,
+    DATA
+};
+
 struct __registro{
      unsigned char NUMERO:3, __unused:5;
 };
@@ -60,6 +65,7 @@ struct __cola_nodo {
 struct __cola {
 	struct __cola_nodo* cabeza;
     struct __cola_nodo* fin;
+    int largo;
 };
 
 struct __symbol_table{
@@ -74,9 +80,17 @@ struct __constructor_salida {
     unsigned short* contenido;
 };
 
+struct __constructor_programa {
+    struct __cola* text;
+    struct __cola* data;
+    struct __symbol_table* symtable;
+};
+
+
 
 typedef char* Token;
 typedef enum __instruccion Instruccion;
+typedef enum __seccion Seccion;
 typedef FILE* Escaner;
 typedef struct __cola_nodo* ColaNodo;
 typedef struct __cola* Cola;
@@ -85,6 +99,7 @@ typedef struct __registro *Registro;
 typedef struct __symbol_table* SymTable;
 typedef struct __operacion* Operacion;
 typedef struct __constructor_salida* ConsSalida;
+typedef struct __constructor_programa* ConsPrograma;
 typedef unsigned short bin;
 typedef unsigned short addr;
 typedef bin (*Traductor)(Operacion, SymTable, addr, addr);

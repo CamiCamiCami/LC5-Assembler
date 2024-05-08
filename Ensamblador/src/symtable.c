@@ -2,6 +2,11 @@
 
 /* Definicion de tipos internos */
 
+struct __full_address {
+    Seccion seccion;
+    unsigned int offset;
+};
+
 struct __symbol {
     char* label;
     short address;
@@ -14,6 +19,39 @@ struct __symbol_list {
 
 typedef struct __symbol_list* SymList;
 typedef struct __symbol* Symbol;
+typedef struct __full_address* FullAddr;
+
+/* Funciones de FullAddr */
+
+FullAddr initFullAddr(Seccion s, unsigned int offset){
+    FullAddr addr = malloc(sizeof(struct __full_address));
+    addr->offset = offset;
+    addr->seccion = s;
+    return addr;
+}
+
+unsigned int getOffset(FullAddr addr){
+    return addr->offset;
+}
+
+void setOffset(FullAddr addr, unsigned int offset){
+    addr->offset = offset;
+    return addr;
+}
+
+Seccion getSeccion(FullAddr addr){
+    return addr->seccion;
+}
+
+void setSeccion(FullAddr addr, Seccion s){
+    addr->seccion = s;
+    return addr;
+}
+
+void freeSymbol(Symbol sym){
+    free(sym->label);
+    free(sym);
+}
 
 /* Funciones de Symbol */
 
@@ -135,7 +173,12 @@ unsigned int hash(const char* in, size_t len)
     return h;
 }
 
+#define LARGO_DEFAULT 10
+
 SymTable initSymTable(int largo){
+    if (largo < 1) {
+        largo = LARGO_DEFAULT;
+    }
     SymTable tabla = malloc(sizeof(struct __symbol_table));
     tabla->array = malloc(sizeof(SymList) * largo);
     for(int i = 0; i < largo; i++)
