@@ -71,7 +71,7 @@ struct __constructor_salida {
     FILE* file;
     int largo;
     int alocado;
-    bin* contenido;
+    unsigned short* contenido;
 };
 
 

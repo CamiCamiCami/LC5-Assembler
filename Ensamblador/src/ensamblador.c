@@ -96,42 +96,29 @@ int main(int argc, char **argv){
 		n_linea++;
     }
 
+	closeEscaner(lector);
+
     debug_print("main: Se pushearon %i instrucciones\n", lengthCola(cola));
 
 	for(int i = 0; i < cont; i++){
 		debug_print("main: %s: %i\n", lista[i], searchSymTable(tabla, lista[i]));
 		free(lista[i]);
 	}
-
-	FILE* f = fopen(ARCHIVO_SALIDA, "wb");
-	 else {
-		debug_print("Archivo %s abierto exitosamente\n", ARCHIVO_SALIDA);
-	}
 	
-	addr pos = ORIG;
-	int escritura_exitosa = fwrite(&pos, sizeof(addr), 1, f);
-	if (!escritura_exitosa){
-		// Manejo de error
-		fprintf(stderr, "Fallo al escribir al archivo, errno: %i\n", errno);
-		exit(1);
-	}
+	ConsSalida buider = initConstructorSalida(ARCHIVO_SALIDA, ORIG);
+	debug_print("%s\n", "1111111111111111");
 	char str[17];
 	comoStr(ORIG, str);
 	debug_print("%s\n", str);
-	for(; !emptyCola(cola); pos++){
+	for(int pos = ORIG; !emptyCola(cola); pos++){
 		Operacion op = popCola(cola);
 		bin traduccion = traducirOperacion(op, tabla, ORIG, pos);
-		int escritura_exitosa = fwrite(&traduccion, sizeof(addr), 1, f);
-		if (!escritura_exitosa){
-			// Manejo de error
-			fprintf(stderr, "Fallo al escribir al archivo, errno: %i\n", errno);
-			exit(1);
-		}
+		agregarConsSalida(buider, traduccion);
 		comoStr(traduccion, str);
 		debug_print("%s\n", str);
 		free(op);
 	}
-	fclose(f);
+	construirSalida(buider);
 
 	return 0;
 }

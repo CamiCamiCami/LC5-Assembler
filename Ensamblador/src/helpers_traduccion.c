@@ -1,7 +1,7 @@
 #include "helpers_traduccion.h"
 #include "operacion.h"
 #include "instruccion.h"
-#include "symtable/symtable.h"
+#include "symtable.h"
 
 #define DEBUG 0
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)

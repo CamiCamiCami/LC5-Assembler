@@ -7,7 +7,8 @@
 #include "cola.h"
 #include "tokens.h"
 #include "operacion.h"
-#include "symtable/symtable.h"
+#include "symtable.h"
 #include "utils.h"
+#include "constructor_salida.h"
 
 

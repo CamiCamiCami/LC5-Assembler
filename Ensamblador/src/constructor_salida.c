@@ -1,6 +1,10 @@
 #include "constructor_salida.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-ConsSalida initConstructorSalida(char path[]){
+
+ConsSalida initConstructorSalida(char path[], addr orig){
     FILE* f = fopen(path, "wb");
     if (f == NULL){
 		// Manejo de error
@@ -13,6 +17,10 @@ ConsSalida initConstructorSalida(char path[]){
     cons->largo = 0;
     cons->contenido = NULL;
     cons->file = f;
+
+    agregarConsSalida(cons, 0b1111111111111111);
+    agregarConsSalida(cons, orig);
+
     return cons;
 }
 
@@ -25,7 +33,9 @@ void agregarConsSalida(ConsSalida cons, bin b) {
         cons->alocado = nuevo_alocado;
     }
 
-    cons->contenido[cons->largo++] = b;
+    bin change_endian = (b << 8) + (b >> 8);
+
+    cons->contenido[cons->largo++] = change_endian;
 }
 
 void construirSalida(ConsSalida cons){
@@ -36,6 +46,6 @@ void construirSalida(ConsSalida cons){
         exit(1);
     }
     fclose(cons->file);
-    free(cons->alocado);
+    free(cons->contenido);
     free(cons);
 }
