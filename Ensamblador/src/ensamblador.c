@@ -16,7 +16,7 @@ char *interpreta_args(int argc, char **argv){
     return argv[1];
 }
 
-#define ARCHIVO_SALIDA "../obj/codigo.bin"
+#define ARCHIVO_SALIDA "../../../SimuladorCoba/miniPC/codigo.bin"
 
 int main(int argc, char **argv){
     debug_print("main: Empieza el programa\n");

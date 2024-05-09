@@ -74,7 +74,7 @@ struct __symbol_table{
 };
 
 struct __full_address {
-    Seccion seccion;
+    enum __seccion seccion;
     unsigned int offset;
 };
 

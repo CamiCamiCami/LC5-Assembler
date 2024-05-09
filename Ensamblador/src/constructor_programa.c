@@ -56,17 +56,21 @@ void buildPrograma(ConsPrograma prog, char path[]) {
     setStartSeccion(TEXT, prog->orig);
     setStartSeccion(DATA, (getStartSeccion(TEXT) + lengthCola(prog->text)));
 
+    agregarConsSalida(builder, (bin)prog->orig);
+
     addr pos = prog->orig;
     while (lengthCola(prog->text) > 0) {
         Operacion op = popCola(prog->text);
         bin traduccion = traducirOperacion(op, prog->symtable, pos);
         agregarConsSalida(builder, traduccion);
+        // freeOp
         pos++;
     }
 
     while (lengthCola(prog->data) > 0) {
-        bin traduccion = popCola(prog->data);
-        agregarConsSalida(builder, traduccion);
+        bin* literal = popCola(prog->data);
+        agregarConsSalida(builder, *literal);
+        free(literal);
         pos++;
     }
 
