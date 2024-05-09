@@ -2,6 +2,7 @@
 #include "operacion.h"
 #include "instruccion.h"
 #include "symtable.h"
+#include "full_address.h"
 
 #define DEBUG 0
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
@@ -96,131 +97,131 @@ bin formatSHNum(short* SH, short* n){
     return b;
 }
 
-bin solveRelReference(SymTable table, addr orig, addr pos, char label[], unsigned int size){
-    int label_offset = searchSymTable(table, label);
-    if (label_offset < 0){
+bin solveRelReference(SymTable table, addr pos, char label[], unsigned int size){
+    FullAddr label_full_addr = searchSymTable(table, label);
+    if (label_full_addr == NULL){
         // Manejo de Error
         fprintf(stderr, "No pudo resolver refenecia a %s\n", label);
         exit(1);
     }
-    addr dest = orig + label_offset;
-    short offset = dest - pos - 1;
-    debug_print("solveRelReference: dest = (orig = %u) + (table[%s] = %u) = %u\n", orig, label, searchSymTable(table, label), dest);
-    debug_print("solveRelReference: offset = (dest = %u) - (pos = %u) = %i\n", dest, pos, offset);
+
+    addr label_addr = solveAddr(label_full_addr);
+    short offset = label_addr - pos - 1;
+    debug_print("solveRelReference: offset = (label_addr = %u) - (pos = %u) = %i\n", label_addr, pos, offset);
     return _formatNum(offset, size);
 }
 
-bin traducirADD(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirADD(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
-bin traducirSUB(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirSUB(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
-bin traducirAND(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirAND(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
-bin traducirOR(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirOR(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
-bin traducirADDI(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirADDI(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
 }
 
-bin traducirANDI(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirANDI(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatSHNum(op->args[2]->valor, op->args[3]->valor);
 }
 
-bin traducirORI(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirORI(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatSHNum(op->args[2]->valor, op->args[3]->valor);
 }
 
-bin traducirBRp(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirBRp(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + solveRelReference(tabla, orig, pos, op->args[0]->valor, 10);
+    return conseguirBase(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 10);
 }
 
-bin traducirBRz(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirBRz(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + solveRelReference(tabla, orig, pos, op->args[0]->valor, 10);
+    return conseguirBase(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 10);
 }
 
-bin traducirBRn(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirBRn(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + solveRelReference(tabla, orig, pos, op->args[0]->valor, 10);
+    return conseguirBase(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 10);
 }
 
-bin traducirJR(Operacion op, SymTable tabla, addr orig, addr pos){
-    checkArgs(op);
-    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 8);
-}
-
-bin traducirJALR(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirJR(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 8);
 }
 
-bin traducirTRAP(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirJALR(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 8);
 }
 
-bin traducirRETI(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirTRAP(Operacion op, SymTable tabla, addr pos){
+    checkArgs(op);
+    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 8);
+}
+
+bin traducirRETI(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins);
 }
 
-bin traducirNOT(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirNOT(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8);
 }
 
-bin traducirJAL(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirJAL(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + solveRelReference(tabla, orig, pos, op->args[0]->valor, 12);
+    return conseguirBase(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 12);
 }
 
-bin traducirLD(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirLD(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, orig, pos, op->args[1]->valor, 9);
+    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, pos, op->args[1]->valor, 9);
 }
 
-bin traducirST(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirST(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, orig, pos, op->args[1]->valor, 9);
+    return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, pos, op->args[1]->valor, 9);
 }
 
-bin traducirLDR(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirLDR(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
-bin traducirSTR(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirSTR(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
-bin traducirLUI(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirLUI(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
-bin traducirLORI(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirLORI(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
     return conseguirBase(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
-bin traducirLJMP(Operacion op, SymTable tabla, addr orig, addr pos){
+bin traducirLJMP(Operacion op, SymTable tabla, addr pos){
     checkArgs(op);
-    return conseguirBase(op->ins) + solveRelReference(tabla, orig, pos, op->args[0]->valor, 12);
+    return conseguirBase(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 12);
 }

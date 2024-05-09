@@ -73,6 +73,11 @@ struct __symbol_table{
     int largo;
 };
 
+struct __full_address {
+    Seccion seccion;
+    unsigned int offset;
+};
+
 struct __constructor_salida {
     FILE* file;
     int largo;
@@ -84,6 +89,7 @@ struct __constructor_programa {
     struct __cola* text;
     struct __cola* data;
     struct __symbol_table* symtable;
+    unsigned short orig;
 };
 
 
@@ -97,12 +103,13 @@ typedef struct __cola* Cola;
 typedef struct __argumento* Argumento;
 typedef struct __registro *Registro;
 typedef struct __symbol_table* SymTable;
+typedef struct __full_address* FullAddr;
 typedef struct __operacion* Operacion;
 typedef struct __constructor_salida* ConsSalida;
 typedef struct __constructor_programa* ConsPrograma;
 typedef unsigned short bin;
 typedef unsigned short addr;
-typedef bin (*Traductor)(Operacion, SymTable, addr, addr);
+typedef bin (*Traductor)(Operacion, SymTable, addr);
 
 void comoStr(bin bin, char str[17]);
 void intComoStr(int word, char repr[33]);

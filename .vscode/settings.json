@@ -6,6 +6,7 @@
         "stdlib.h": "c",
         "stdbool.h": "c",
         "ensamblador.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "full_address.h": "c"
     }
 }

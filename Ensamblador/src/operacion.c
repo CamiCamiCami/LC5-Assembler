@@ -13,10 +13,9 @@ Operacion initOperacion(Instruccion ins, Argumento* args, int argc){
     return op;
 }
 
-bin traducirOperacion(Operacion op, SymTable tabla, addr orig, addr pos){
-    return (conseguirTraductor(op->ins))(op, tabla, orig, pos);
+bin traducirOperacion(Operacion op, SymTable tabla, addr pos){
+    return (conseguirTraductor(op->ins))(op, tabla, pos);
 }
-
 
 
 

@@ -9,4 +9,4 @@ typedef struct __operacion *Operacion;
 
 Operacion initOperacion(Instruccion ins, Argumento* args, int argc);
 
-bin traducirOperacion(Operacion op, SymTable tabla, addr orig, addr pos);
+bin traducirOperacion(Operacion op, SymTable tabla, addr pos);

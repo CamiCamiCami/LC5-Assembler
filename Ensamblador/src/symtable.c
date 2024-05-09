@@ -2,14 +2,9 @@
 
 /* Definicion de tipos internos */
 
-struct __full_address {
-    Seccion seccion;
-    unsigned int offset;
-};
-
 struct __symbol {
     char* label;
-    short address;
+    FullAddr address;
 };
 
 struct __symbol_list {
@@ -19,43 +14,10 @@ struct __symbol_list {
 
 typedef struct __symbol_list* SymList;
 typedef struct __symbol* Symbol;
-typedef struct __full_address* FullAddr;
-
-/* Funciones de FullAddr */
-
-FullAddr initFullAddr(Seccion s, unsigned int offset){
-    FullAddr addr = malloc(sizeof(struct __full_address));
-    addr->offset = offset;
-    addr->seccion = s;
-    return addr;
-}
-
-unsigned int getOffset(FullAddr addr){
-    return addr->offset;
-}
-
-void setOffset(FullAddr addr, unsigned int offset){
-    addr->offset = offset;
-    return addr;
-}
-
-Seccion getSeccion(FullAddr addr){
-    return addr->seccion;
-}
-
-void setSeccion(FullAddr addr, Seccion s){
-    addr->seccion = s;
-    return addr;
-}
-
-void freeSymbol(Symbol sym){
-    free(sym->label);
-    free(sym);
-}
 
 /* Funciones de Symbol */
 
-Symbol initSymbol(char* label, int address){
+Symbol initSymbol(char* label, FullAddr address){
     Symbol sym = malloc(sizeof(struct __symbol));
     char* label_cpy = malloc(sizeof(char) * (strlen(label) + 1));
     strcpy(label_cpy, label);
@@ -76,17 +38,19 @@ Symbol setLabel(Symbol sym, char* label){
     return sym;
 }
 
-int getAddress(Symbol sym){
+FullAddr getAddress(Symbol sym){
     return sym->address;
 }
 
-Symbol setAddress(Symbol sym, int address){
+Symbol setAddress(Symbol sym, FullAddr address){
+    freeFullAddr(sym->address);
     sym->address = address;
     return sym;
 }
 
 void freeSymbol(Symbol sym){
     free(sym->label);
+    freeFullAddr(sym->address);
     free(sym);
 }
 
@@ -105,7 +69,7 @@ bool emptySymList(SymList map){
     return map == NULL;
 }
 
-SymList insertSymList(SymList map, char* llave, int dato){
+SymList insertSymList(SymList map, char* llave, FullAddr dato){
     if (emptySymList(map)){
         Symbol sym = initSymbol(llave, dato);
         SymList nodo = malloc(sizeof(struct __symbol_list));
@@ -134,9 +98,9 @@ SymList removeSymList(SymList map, char* llave){
     }
 }
 
-int searchSymList(SymList map, char* llave){
+FullAddr searchSymList(SymList map, char* llave){
     if (emptySymList(map)){
-        return -1;
+        return NULL;
     } else if (strcmp(llave, LLAVE(map)) == 0) {
         return DATO(map);
     } else {
@@ -187,19 +151,17 @@ SymTable initSymTable(int largo){
     return tabla;
 } 
 
-SymTable insertSymTable(SymTable tabla, char* llave, int dato){
-    int idx = hash(llave, strlen(llave)) % tabla->largo;
-    tabla->array[idx] = insertSymList(tabla->array[idx], llave, dato);
-    return tabla;
+void insertSymTable(SymTable tabla, char* label, FullAddr addr){
+    int idx = hash(label, strlen(label)) % tabla->largo;
+    tabla->array[idx] = insertSymList(tabla->array[idx], label, addr);
 }
 
-SymTable removeSymTable(SymTable tabla, char* llave){
+void removeSymTable(SymTable tabla, char* llave){
     int idx = hash(llave, strlen(llave)) % tabla->largo;
     tabla->array[idx] = removeSymList(tabla->array[idx], llave);
-    return tabla;
 }
 
-int searchSymTable(SymTable tabla, char* llave){
+FullAddr searchSymTable(SymTable tabla, char* llave){
     int idx = hash(llave, strlen(llave)) % tabla->largo;
     return searchSymList(tabla->array[idx], llave);
 }
