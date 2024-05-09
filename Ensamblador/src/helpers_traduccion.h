@@ -24,3 +24,8 @@ bin traducirSTR(Operacion op, SymTable tabla, addr pos);
 bin traducirLUI(Operacion op, SymTable tabla, addr pos);
 bin traducirLORI(Operacion op, SymTable tabla, addr pos);
 bin traducirLJMP(Operacion op, SymTable tabla, addr pos);
+
+void efectoORIG(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc);
+void efectoFILL(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc);
+void efectoBLKW(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc);
+void efectoEND(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc);

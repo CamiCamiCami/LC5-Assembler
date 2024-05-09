@@ -3,7 +3,7 @@
 
 ConsPrograma initConstructorPrograma();
 
-void addInstruccionPrograma(ConsPrograma prog, Operacion op, char label[]);
+void addOperacionPrograma(ConsPrograma prog, Operacion op, char label[]);
 
 void addDataPrograma(ConsPrograma prog, bin literal, char label[]);
 

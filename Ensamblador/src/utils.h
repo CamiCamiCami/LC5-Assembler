@@ -6,13 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TIPO_NUMERO 1
-#define TIPO_REGISTRO 2
-#define TIPO_ETIQUETA 3
-
+#define MAX_ADDR (1 << 16)
 
 enum __instruccion{
-	ADD = 1,
+    NULL_INS = 0,
+	ADD,
     SUB,
     AND,
     OR,
@@ -35,12 +33,31 @@ enum __instruccion{
     LUI,
     LORI,
     LJMP,
-    NULL_INS
+};
+
+enum __pseudoop{
+    NULL_PSO = 0,
+    ORIG,
+    FILL,
+    BLKW,
+    END
+};
+
+enum __tipo_args {
+    TIPO_NUMERO = 1,
+    TIPO_REGISTRO,
+    TIPO_ETIQUETA
 };
 
 enum __seccion {
     TEXT,
     DATA
+};
+
+enum __tipo_token {
+    INSTRUCCION,
+    PSEUDOOP,
+    ETIQUETA
 };
 
 struct __registro{
@@ -90,16 +107,26 @@ struct __constructor_programa {
     struct __cola* data;
     struct __symbol_table* symtable;
     unsigned short orig;
+    bool reached_end;
 };
 
+struct __operacion{
+    enum __instruccion ins;
+    struct __argumento** args;
+    int argc;
+};
 
 
 typedef char* Token;
 typedef enum __instruccion Instruccion;
 typedef enum __seccion Seccion;
+typedef enum __pseudoop PseudoOp;
+typedef enum __tipo_args ArgsTipo;
+typedef enum __tipo_token TipoToken;
 typedef FILE* Escaner;
 typedef struct __cola_nodo* ColaNodo;
 typedef struct __cola* Cola;
+typedef struct __operacion *Operacion;
 typedef struct __argumento* Argumento;
 typedef struct __registro *Registro;
 typedef struct __symbol_table* SymTable;
@@ -110,9 +137,11 @@ typedef struct __constructor_programa* ConsPrograma;
 typedef unsigned short bin;
 typedef unsigned short addr;
 typedef bin (*Traductor)(Operacion, SymTable, addr);
+typedef void (*AfectarPrograma)(ConsPrograma, PseudoOp, char*, Argumento*, unsigned int);
 
 void comoStr(bin bin, char str[17]);
 void intComoStr(int word, char repr[33]);
 void argTipoComoStr(unsigned char tipo, char repr[10]);
+TipoToken encontrarTipoToken(Token tkn);
 
 #endif 

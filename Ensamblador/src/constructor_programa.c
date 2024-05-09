@@ -16,11 +16,15 @@ ConsPrograma initConstructorPrograma() {
     prog->text = initCola();
     prog->symtable = initSymTable(0);
     prog->orig = DEFAULT_ORIG;
+    prog->reached_end = false;
 
     return prog;
 }
 
-void addInstruccionPrograma(ConsPrograma prog, Operacion op, char label[]) {
+void addOperacionPrograma(ConsPrograma prog, Operacion op, char label[]) {
+    if (prog->reached_end) {
+        return;
+    }
     if (label != NULL) {
         unsigned int pos = lengthCola(prog->text);
         insertSymTable(prog->symtable, label, initFullAddr(TEXT, pos));
@@ -28,7 +32,10 @@ void addInstruccionPrograma(ConsPrograma prog, Operacion op, char label[]) {
     pushCola(prog->text, op);
 }
 
-void addDataPrograma(ConsPrograma prog, bin literal, char label[]){
+void addDataPrograma(ConsPrograma prog, bin literal, char label[]) {
+    if (prog->reached_end) {
+        return;
+    }
     if (label != NULL) {
         unsigned int pos = lengthCola(prog->data);
         insertSymTable(prog->symtable, label, initFullAddr(DATA, pos));

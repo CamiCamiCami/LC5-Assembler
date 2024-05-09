@@ -16,6 +16,30 @@ char *interpreta_args(int argc, char **argv){
     return argv[1];
 }
 
+void agregarOperacion(ConsPrograma prog, char label[], Token tkns[], int c_tokens){
+	if (c_tokens > 2){
+		// Manejo de Error
+		fprintf(stderr, "Mala cantidad de tokens. Esperaba 1-2 pero encontro %i\n", c_tokens);
+		exit(1);
+	}
+
+	Operacion op = initOperacion(tkns, c_tokens);
+	addOperacionPrograma(prog, op, label);
+}
+
+void agregarPseudoOp(ConsPrograma prog, char label[], Token tkns[], int c_tokens){
+	if (c_tokens > 2){
+		// Manejo de Error
+		fprintf(stderr, "Mala cantidad de tokens. Esperaba 1-2 pero encontro %i\n", c_tokens);
+		exit(1);
+	}
+
+	PseudoOp pso = deStringInstruccion(tkns[0]);
+	int argc = 0;
+	Argumento* args = parsearArgumentos(tkns[1], &argc);
+	(efectoPseudoOp(pso))(prog, pso, label, args, argc);
+}
+
 #define ARCHIVO_SALIDA "../../../SimuladorCoba/miniPC/codigo.bin"
 
 int main(int argc, char **argv){
@@ -46,43 +70,34 @@ int main(int argc, char **argv){
 			continue;
 		}
 		
-		Instruccion opcode = deString(tkns[0]);
-		Argumento* args = NULL;
-		char* label = NULL;
-		int argc = 0;
-		
-		if(opcode == NULL_INS){
-			if (!(c_tkns == 2 || c_tkns == 3)){
-				// Manejo de Error
-				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 2-3 pero encontro %i\n", linea, c_tkns);
+		switch (encontrarTipoToken(tkns[0])) {
+		case INSTRUCCION:
+			agregarOperacion(builder, NULL, tkns, c_tkns);
+			break;
+		case PSEUDOOP:
+			agregarPseudoOp(builder, NULL, tkns, c_tkns);
+			break;
+		case ETIQUETA:
+			switch (encontrarTipoToken(tkns[1])) {
+			case INSTRUCCION:
+				agregarOperacion(builder, tkns[0], tkns+1, c_tkns-1);
+				break;
+			case PSEUDOOP:
+				agregarPseudoOp(builder, tkns[0], tkns+1, c_tkns-1);
+				break;
+			default:
+				// Manejo de error
+				fprintf(stderr, "Tipo de token desconocido\n");
 				exit(1);
 			}
-
-			opcode = deString(tkns[1]);
-			if (opcode == NULL_INS){
-				// Manejo de Error
-				fprintf(stderr, "Sintaxis invalida, esperaba una instruccion pero encontro %s\n", tkns[1]);
-				exit(1);
-			}
-
-			debug_print("main: etiqueta %s en linea %i\n", tkns[0], n_linea);
-
-			if(c_tkns == 3) {
-				args = parsearArgumentos(tkns[2], &argc);
-			}		
-		} else {
-			if (!(c_tkns == 1 || c_tkns == 2)){
-				// Manejo de Error
-				fprintf(stderr, "Mala cantidad de tokens en linea \"%s\". Esperaba 1-2 pero encontro %i\n", linea, c_tkns);
-				exit(1);
-			}
-			if (c_tkns == 2){
-				args = parsearArgumentos(tkns[1], &argc);	
-			}
+			break;
+		default:
+			// Manejo de error
+			fprintf(stderr, "Tipo de token desconocido\n");
+			exit(1);
 		}
-		
-        Operacion op = initOperacion(opcode, args, argc);
-        addInstruccionPrograma(builder, op, label);
+	
+        
         free(linea);
 		for (int i = 0; i < c_tkns; i++)
 			free(tkns[i]);

@@ -1,12 +1,7 @@
 #include "utils.h"
 
-struct __operacion{
-    Instruccion ins;
-    Argumento* args;
-    int argc;
-};
-typedef struct __operacion *Operacion;
-
-Operacion initOperacion(Instruccion ins, Argumento* args, int argc);
+Operacion initOperacion(Token tkns[], int c_tkns);
 
 bin traducirOperacion(Operacion op, SymTable tabla, addr pos);
+
+void freeOperacion(Operacion op);
