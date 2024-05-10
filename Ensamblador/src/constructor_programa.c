@@ -11,6 +11,50 @@
 
 #define DEFAULT_ORIG 3000
 
+
+/* Tipo Interno Entrada de Dato */
+
+struct __data_entrada {
+    bool es_etiqueta;
+    bin literal;
+    char* etiqueta;
+};
+
+typedef struct __data_entrada* EntradaDato;
+
+EntradaDato initEntradaDato_Literal(bin literal) {
+    EntradaDato dato = malloc(sizeof(struct __data_entrada));
+    dato->es_etiqueta = false;
+    dato->literal = literal;
+    dato->etiqueta = NULL;
+    return dato;
+}
+
+EntradaDato initEntradaDato_Etiqueta(char etiqueta[]) {
+    EntradaDato dato = malloc(sizeof(struct __data_entrada));
+    dato->es_etiqueta = true;
+    dato->literal = 0;
+    dato->etiqueta = malloc(sizeof(char) * (strlen(etiqueta) + 1));
+    strcpy(dato->etiqueta, etiqueta);
+    return dato;
+}
+
+char* getDato_Etiqueta(EntradaDato dato) {
+    return dato->etiqueta;
+}
+
+bin getDato_Literal(EntradaDato dato) {
+    return dato->literal;
+}
+
+void freeDato(EntradaDato dato) {
+    if (dato->es_etiqueta){
+        free (dato->etiqueta);
+    }
+    free(dato);
+}
+
+
 ConsPrograma initConstructorPrograma() {
     ConsPrograma prog = malloc(sizeof(struct __constructor_programa));
 

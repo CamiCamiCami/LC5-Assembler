@@ -255,19 +255,7 @@ bin traducirLJMP(Operacion op, SymTable tabla, addr pos){
 }
 
 void efectoORIG(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){
-    if (label != NULL) {
-        // Manejo de error
-        fprintf(stderr, "No se admiten atiqutas que apunten a .orig\n");
-        exit(1);
-    }
     checkArgsPseudoOp(pso, args, argc);
-    int addr_int = *((int*) args[0]->valor);
-    if (addr_int < 0 || MAX_ADDR < addr_int){
-        // Manejo de error
-        fprintf(stderr, "Origen del programa no puede ser la direccion invalida %i. Fuera de rango 0-%i\n", addr_int, MAX_ADDR);
-        exit(1);
-    }
-    setOrig(prog, (addr) addr_int);
 }
 
 void efectoFILL(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){

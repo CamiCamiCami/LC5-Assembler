@@ -35,7 +35,7 @@ enum __instruccion{
     LJMP,
 };
 
-enum __pseudoop{
+enum __pseudoins{
     NULL_PSO = 0,
     ORIG,
     FILL,
@@ -120,7 +120,7 @@ struct __operacion{
 typedef char* Token;
 typedef enum __instruccion Instruccion;
 typedef enum __seccion Seccion;
-typedef enum __pseudoop PseudoOp;
+typedef enum __pseudoins PseudoIns;
 typedef enum __tipo_args ArgsTipo;
 typedef enum __tipo_token TipoToken;
 typedef FILE* Escaner;
