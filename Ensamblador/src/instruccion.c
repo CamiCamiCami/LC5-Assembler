@@ -14,7 +14,7 @@ void comoStringInstruccion(Instruccion ins, char str[5]){
     str[i] = '\0';
 }
 
-Instruccion deString(char token[]){
+Instruccion deStringInstruccion(char token[]){
 	char cpy[strlen(token)];
 	strcpy(cpy, token);
 	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
@@ -27,7 +27,7 @@ Instruccion deString(char token[]){
     return NULL_INS;
 }
 
-int conseguirArgsTipo(Instruccion INS, int args[5]){
+int conseguirArgsTipoInstruccion(Instruccion INS, int args[5]){
     switch (INS)
     {
     case ADD:
@@ -124,13 +124,13 @@ int conseguirArgsTipo(Instruccion INS, int args[5]){
         args[0] = TIPO_ETIQUETA;
         return 1;
     default:
-        fprintf(stderr, "Instruccion base INS inexistente. Esperaba un codigo 1-%i, recibio %i\n", CANT_CODIGOS_INS, INS);
+        fprintf(stderr, "Instruccion inexistente. Esperaba un codigo 1-%i, recibio %i\n", CANT_CODIGOS_INS, INS);
         exit(1);
         break;
     }
 }
 
-bin conseguirBase(Instruccion INS){
+bin conseguirBaseInstruccion(Instruccion INS){
     switch (INS) {
     case ADD:
         return 0b0001000000000000;
@@ -186,7 +186,7 @@ bin conseguirBase(Instruccion INS){
 }
 
 
-Traductor conseguirTraductor(Instruccion INS){
+Traductor conseguirTraductorInstruccion(Instruccion INS){
 	switch (INS) {
 		case ADD:
         	return traducirADD;

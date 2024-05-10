@@ -3,11 +3,11 @@
 
 SymTable initSymTable(int largo);
 
-SymTable insertSymTable(SymTable tabla, char* llave, int dato);
+void insertSymTable(SymTable tabla, char* etiqueta, FullAddr addr);
 
-SymTable removeSymTable(SymTable tabla, char* llave);
+void removeSymTable(SymTable tabla, char* etiqueta);
 
-int searchSymTable(SymTable tabla, char* llave);
+FullAddr searchSymTable(SymTable tabla, char* etiqueta);
 
 void freeSymTable(SymTable tabla);
 

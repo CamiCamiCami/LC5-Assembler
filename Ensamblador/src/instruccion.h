@@ -1,12 +1,12 @@
 #include "utils.h"
 
 
-Instruccion deString(char token[]);
+Instruccion deStringInstruccion(char token[]);
 
-int conseguirArgsTipo(Instruccion ins, int args[5]);
+int conseguirArgsTipoInstruccion(Instruccion ins, int args[5]);
 
-bin conseguirBase(Instruccion ins);
+bin conseguirBaseInstruccion(Instruccion ins);
 
-Traductor conseguirTraductor(Instruccion ins);
+Traductor conseguirTraductorInstruccion(Instruccion ins);
 
 void comoStringInstruccion(Instruccion ins, char str[5]);
