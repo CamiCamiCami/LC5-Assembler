@@ -6,10 +6,10 @@
 #include "full_address.h"
 #include "constructor_programa.h"
 
-#define DEBUG 0
+#define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
-void checkArgsInstruccion(Operacion op){
+void checkArgsOperacion(Operacion op){
     Instruccion ins = op->ins;
     Argumento* args = op->args;
     int c_arg = op->argc;
@@ -140,117 +140,117 @@ bin solveRelReference(SymTable table, addr pos, char label[], unsigned int size)
 }
 
 bin traducirADD(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
 bin traducirSUB(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
 bin traducirAND(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
 bin traducirOR(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
 bin traducirADDI(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
 }
 
 bin traducirANDI(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatSHNum(op->args[2]->valor, op->args[3]->valor);
 }
 
 bin traducirORI(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatSHNum(op->args[2]->valor, op->args[3]->valor);
 }
 
 bin traducirBRp(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 10);
 }
 
 bin traducirBRz(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 10);
 }
 
 bin traducirBRn(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 10);
 }
 
 bin traducirJR(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 8);
 }
 
 bin traducirJALR(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 8);
 }
 
 bin traducirTRAP(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 8);
 }
 
 bin traducirRETI(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins);
 }
 
 bin traducirNOT(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8);
 }
 
 bin traducirJAL(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 12);
 }
 
 bin traducirLD(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, pos, op->args[1]->valor, 9);
 }
 
 bin traducirST(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, pos, op->args[1]->valor, 9);
 }
 
 bin traducirLDR(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
 bin traducirSTR(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
 }
 
 bin traducirLUI(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
 bin traducirLORI(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
 bin traducirLJMP(Operacion op, SymTable tabla, addr pos){
-    checkArgsInstruccion(op);
+    checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 12);
 }
 
@@ -261,42 +261,52 @@ void efectoORIG(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[],
         exit(1);
     }
     checkArgsPseudoOp(pso, args, argc);
-    int addr_int = *((addr*) args[0]->valor);
+    int addr_int = *((int*) args[0]->valor);
     if (addr_int < 0 || MAX_ADDR < addr_int){
         // Manejo de error
         fprintf(stderr, "Origen del programa no puede ser la direccion invalida %i. Fuera de rango 0-%i\n", addr_int, MAX_ADDR);
         exit(1);
     }
-    prog->orig = (addr) addr_int;
+    setOrig(prog, (addr) addr_int);
 }
 
 void efectoFILL(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){
     checkArgsPseudoOp(pso, args, argc);
-    int bin_int = *((addr*) args[0]->valor);
-    if (bin_int < 0 || 0xFFFF < bin_int){
+    unsigned int bin_int = *((unsigned int*) args[0]->valor);
+    /*
+    if (bin_int < 0U ||  < bin_int){
         // Manejo de error
-        fprintf(stderr, "No se puede crear el literal %i. Fuera de rango 0-%i\n", bin_int, 0xFFFF);
+        fprintf(stderr, "No se puede crear el literal %u. Fuera de rango 0-%u\n", bin_int, 0xFFFF);
         exit(1);
     }
+    */
     addDataPrograma(prog, (bin) bin_int, label);
 }
 
 void efectoBLKW(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){
     checkArgsPseudoOp(pso, args, argc);
-    int c_blocks = *((addr*) args[0]->valor);
+    int c_blocks = *((int*) args[0]->valor);
     if (c_blocks < 1){
         // Manejo de error
         fprintf(stderr, ".blkw no puede reservar ua cantidad de %i\n", c_blocks);
         exit(1);
     }
 
+    debug_print("efectoBLKW: c_blocks = %i\n", c_blocks);
     addDataPrograma(prog, (bin) 0, label);
-    for (int i = c_blocks - 1; c_blocks > 0; c_blocks--){
+    c_blocks--;
+    for (; c_blocks > 0; c_blocks--){
+        debug_print("efectoBLKW: c_blocks = %i\n", c_blocks);
         addDataPrograma(prog, (bin) 0, NULL);
     }
 }
 
 void efectoEND(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){
+    if (label != NULL) {
+        // Manejo de error
+        fprintf(stderr, "No se admiten atiqutas que apunten a .end\n");
+        exit(1);
+    }
     checkArgsPseudoOp(pso, args, argc);
     prog->reached_end = true;
 }

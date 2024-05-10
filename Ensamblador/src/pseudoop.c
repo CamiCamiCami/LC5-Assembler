@@ -39,10 +39,7 @@ AfectarPrograma efectoPseudoOp(PseudoOp pso) {
     case END:
         return efectoEND;
     default:
-        // Manejo de error
-        fprintf(stderr, "pseudo operacion inexistente. Esperaba un codigo 1-%i, recibio %i\n", C_CODIGOS_PSEUDOOP, pso);
-        exit(1);
-        break;
+        return NULL_PSO;
     }
 }
 

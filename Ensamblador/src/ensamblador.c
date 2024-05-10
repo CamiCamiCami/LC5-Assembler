@@ -34,9 +34,12 @@ void agregarPseudoOp(ConsPrograma prog, char label[], Token tkns[], int c_tokens
 		exit(1);
 	}
 
-	PseudoOp pso = deStringInstruccion(tkns[0]);
+	PseudoOp pso = deStringPseudoOp(tkns[0]);
 	int argc = 0;
-	Argumento* args = parsearArgumentos(tkns[1], &argc);
+	Argumento* args = NULL;
+	if (c_tokens == 2) {
+		args = parsearArgumentos(tkns[1], &argc);
+	}
 	(efectoPseudoOp(pso))(prog, pso, label, args, argc);
 }
 

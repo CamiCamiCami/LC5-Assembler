@@ -15,7 +15,7 @@ void setStartSeccion(Seccion s, addr starts) {
         TEXT_addr = starts;
         break;
     case DATA:
-        DATA_has_addr = false;
+        DATA_has_addr = true;
         DATA_addr = starts;
         break;
     default:
