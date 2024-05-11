@@ -40,18 +40,38 @@ EntradaDato initEntradaDato_Etiqueta(char etiqueta[]) {
 }
 
 char* getDato_Etiqueta(EntradaDato dato) {
+    if (!dato->es_etiqueta) {
+        // Manejo de Error
+        fprintf(stderr, "El dato es un literal, no tiene etiqueta\n");
+        exit(1);
+    }
     return dato->etiqueta;
 }
 
 bin getDato_Literal(EntradaDato dato) {
+    if (!dato->es_etiqueta) {
+        // Manejo de Error
+        fprintf(stderr, "El dato es una etiqueta, no tiene literal\n");
+        exit(1);
+    }
     return dato->literal;
 }
 
 void freeDato(EntradaDato dato) {
     if (dato->es_etiqueta){
-        free (dato->etiqueta);
+        free(dato->etiqueta);
     }
     free(dato);
+}
+
+bin traducirDato(EntradaDato dato, SymTable tabla) {
+    if (dato->es_etiqueta) {
+        FullAddr full_addr = searchSymTable(tabla, dato->etiqueta);
+        addr address = solveAddr(full_addr);
+        return (bin) address;
+    } else {
+        return dato->literal;
+    }
 }
 
 
@@ -83,26 +103,46 @@ void addOperacionPrograma(ConsPrograma prog, Operacion op, char label[]) {
     debug_print("addOperacionPrograma: Operacion agregada exitosamente\n");
 }
 
-void addDataPrograma(ConsPrograma prog, bin literal, char label[]) {
+void addLiteralPrograma(ConsPrograma prog, bin literal, char label[]) {
     if (prog->reached_end) {
-        debug_print("addDataPrograma: No se agrego la operacion, fin del programa alcanzado\n");
+        debug_print("addLiteralPrograma: No se agrego la operacion, fin del programa alcanzado\n");
         return;
     }
     if (label != NULL) {
         unsigned int pos = lengthCola(prog->data);
         insertSymTable(prog->symtable, label, initFullAddr(DATA, pos));
-        debug_print("addDataPrograma: Encontro label %s sobre un literal\n", label);
+        debug_print("addLiteralPrograma: Encontro label %s sobre un literal\n", label);
     }
 
-    bin* ptr = malloc(sizeof(bin));
-    *ptr = literal;
-    pushCola(prog->data, ptr);
-    debug_print("addDataPrograma: Literal agregado exitosamente\n");
+    EntradaDato dato = initEntradaDato_Literal(literal);
+    pushCola(prog->data, dato);
+    debug_print("addLiteralPrograma: Literal agregado exitosamente\n");
+}
+
+void addPointerPrograma(ConsPrograma prog, char puntero[], char label[]) {
+    if (prog->reached_end) {
+        debug_print("addPointerPrograma: No se agrego la operacion, fin del programa alcanzado\n");
+        return;
+    }
+    if (label != NULL) {
+        unsigned int pos = lengthCola(prog->data);
+        insertSymTable(prog->symtable, label, initFullAddr(DATA, pos));
+        debug_print("addPointerPrograma: Encontro label %s sobre un literal\n", label);
+    }
+
+    EntradaDato dato = initEntradaDato_Etiqueta(label);
+    pushCola(prog->data, dato);
+    debug_print("addPointerPrograma: Literal agregado exitosamente\n");
 }
 
 void setOrig(ConsPrograma prog, addr orig) {
     prog->orig = orig;
     debug_print("setOrig: origen seteado a %u\n", orig);
+}
+
+void programaLlegoAlFin(ConsPrograma prog) {
+    prog->reached_end = true;
+    debug_print("programaLlegoAlFin: Fin encontrado\n");
 }
 
 void freeConsPrograma(ConsPrograma prog) {
@@ -122,9 +162,8 @@ void buildPrograma(ConsPrograma prog, char path[]) {
     setStartSeccion(DATA, (getStartSeccion(TEXT) + lengthCola(prog->text)));
     debug_print("buildPrograma: Inicio de seccion .data seteada a %u\n", (getStartSeccion(TEXT) + lengthCola(prog->text)));
 
-    agregarConsSalida(builder, (bin)prog->orig);
+    agregarConsSalida(builder, (bin)prog->orig);    // Temporal
 
-    
     addr pos = prog->orig;
     while (lengthCola(prog->text) > 0) {
         Operacion op = popCola(prog->text);
@@ -135,9 +174,10 @@ void buildPrograma(ConsPrograma prog, char path[]) {
     }
     debug_print("buildPrograma: Seccion .text construida exitosamente\n");
     while (lengthCola(prog->data) > 0) {
-        bin* literal = popCola(prog->data);
-        agregarConsSalida(builder, *literal);
-        free(literal);
+        EntradaDato dato = popCola(prog->data);
+        bin literal = traducirDato(dato, prog->symtable);
+        agregarConsSalida(builder, literal);
+        freeDato(dato);
         pos++;
     }
     debug_print("buildPrograma: Seccion .data construida exitosamente\n");

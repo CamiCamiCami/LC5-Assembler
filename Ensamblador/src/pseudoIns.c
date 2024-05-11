@@ -1,6 +1,7 @@
 #include "pseudoIns.h"
 #include "helpers_traduccion.h"
 #include "argumentos.h"
+#include "constructor_programa.h"
 #include <ctype.h>
 
 #define C_CODIGOS_PSEUDOOP 4
@@ -8,18 +9,18 @@ static const char CODIGOS_PSEUDOOP[C_CODIGOS_PSEUDOOP][10] = {".orig", ".fill", 
 
 void checkArgs(PseudoIns psi, Argumento args[], unsigned int argc){
     ArgsTipo esperado[5];
-    unsigned int c_esperado = conseguirArgsTipoPseudoOp(psi, esperado);
+    unsigned int c_esperado = conseguirArgsTipoPseudoIns(psi, esperado);
 
     if(argc != c_esperado){
         // Manejo de Error
         char str[15];
-        comoStringPseudoOp(psi, str);
+        comoStringPseudoIns(psi, str);
         fprintf(stderr, "Argumentos invalidos para pseudo operacion %s. Esperaba %i argumento/s pero recibio %i\n", str, c_esperado, argc);
         exit(1);
     }
 
     for (int i = 0; i < argc; i++){
-        if (esperado[i] != args[i]->tipo){
+        if (!(esperado[i] & args[i]->tipo)){
             // Manejo de Error
             char str_pso[5], str_esperado[10], str_recibido[10];
             comoStringPseudoIns(psi, str_pso);
@@ -59,23 +60,44 @@ void efectuarPseudoOp (ConsPrograma prog, Token tkns[], unsigned int c_tkns, cha
         break;
 
     case FILL:
-        return efectoFILL;
-    case BLKW:
-        return efectoBLKW;
+        if (args[0]->tipo & TIPO_ETIQUETA){
+            addPointerPrograma(prog, args[0]->valor, label);
+        } else {
+            addLiteralPrograma(prog, (*((unsigned int*) args[0]->valor)), label);
+        }
+        break;
+
+    case BLKW:  ; // <- El punto y como esta porque quiero declarar al inicio del case
+        unsigned int c_blocks = *((unsigned int*)args[0]->valor);
+        if (c_blocks < 1){
+            // Manejo de error
+            fprintf(stderr, ".blkw no puede reservar ua cantidad de %i\n", c_blocks);
+            exit(1);
+        }
+
+        addLiteralPrograma(prog, (bin) 0, label);
+        c_blocks--;
+        for (; c_blocks > 0; c_blocks--){
+            addLiteralPrograma(prog, (bin) 0, NULL);
+        }
+        break;
+
     case END:
         if (label != NULL) {
             // Manejo de error
             fprintf(stderr, "No se admiten etiqutas que apunten a .end\n");
             exit(1);
         }
-        prog->reached_end = true;
+        programaLlegoAlFin(prog);
         break;
     
     default:
-        return NULL_PSO;
+        // Manejo de Error
+        fprintf(stderr, "Pseudo Instruccion invalida con codigo %i\n", psi);
+        exit(1);
     }
 
-    for(int i = 0; i < argc; i++){
+    for (int i = 0; i < argc; i++) {
         freeArgumento(args[i]);
     }
 }
@@ -104,18 +126,13 @@ void comoStringPseudoIns(PseudoIns psi, char repr[]) {
 }
 
 
-AfectarPrograma efectoPseudoIns(PseudoIns psi, ConsPrograma prog) {
-    
-}
-
-
 unsigned int conseguirArgsTipoPseudoIns(PseudoIns psi, ArgsTipo args[5]) {
-    switch (pso) {
+    switch (psi) {
     case ORIG:
         args[0] = TIPO_NUMERO;
         return 1U;
     case FILL:
-        args[0] = TIPO_NUMERO;
+        args[0] = TIPO_NUMERO | TIPO_ETIQUETA;
         return 1U;
     case BLKW:
         args[0] = TIPO_NUMERO;
@@ -124,7 +141,7 @@ unsigned int conseguirArgsTipoPseudoIns(PseudoIns psi, ArgsTipo args[5]) {
         return 0U;
     default:
         // Manejo de error
-        fprintf(stderr, "pseudo operacion inexistente. Esperaba un codigo 1-%i, recibio %i\n", C_CODIGOS_PSEUDOOP, pso);
+        fprintf(stderr, "pseudo operacion inexistente. Esperaba un codigo 1-%i, recibio %i\n", C_CODIGOS_PSEUDOOP, psi);
         exit(1);
         break;
     }

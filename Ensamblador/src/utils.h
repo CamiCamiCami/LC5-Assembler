@@ -44,9 +44,9 @@ enum __pseudoins{
 };
 
 enum __tipo_args {
-    TIPO_NUMERO = 1,
-    TIPO_REGISTRO,
-    TIPO_ETIQUETA
+    TIPO_NUMERO = 0b00000011,
+    TIPO_REGISTRO = 0b00001100,
+    TIPO_ETIQUETA = 0b00110000
 };
 
 enum __seccion {
@@ -137,7 +137,6 @@ typedef struct __constructor_programa* ConsPrograma;
 typedef unsigned short bin;
 typedef unsigned short addr;
 typedef bin (*Traductor)(Operacion, SymTable, addr);
-typedef void (*AfectarPrograma)(ConsPrograma, PseudoOp, char*, Argumento*, unsigned int);
 
 void comoStr(bin bin, char str[17]);
 void intComoStr(int word, char repr[33]);

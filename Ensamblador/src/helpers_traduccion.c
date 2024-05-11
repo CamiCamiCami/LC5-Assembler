@@ -1,7 +1,6 @@
 #include "helpers_traduccion.h"
 #include "operacion.h"
 #include "instruccion.h"
-#include "pseudoop.h"
 #include "symtable.h"
 #include "full_address.h"
 #include "constructor_programa.h"
@@ -26,38 +25,13 @@ void checkArgsOperacion(Operacion op){
     }
 
     for (int i = 0; i < c_esperado; i++){
-        if (esperado[i] != args[i]->tipo){
+        if (!(esperado[i] & args[i]->tipo)){
             // Manejo de Error
             char str_ins[5], str_esperado[10], str_recibido[10];
             comoStringInstruccion(op->ins, str_ins);
             argTipoComoStr(esperado[i], str_esperado);
             argTipoComoStr(args[i]->tipo, str_recibido);
             fprintf(stderr, "Argumentos invalidos para operacion %s. en la posicion %i, esperaba tipo %s pero recibio tipo %s\n", str_ins, i+1, str_esperado, str_recibido);
-            exit(1);
-        }
-    }
-}
-
-void checkArgsPseudoOp(PseudoOp pso, Argumento args[], unsigned int argc){
-    ArgsTipo esperado[5];
-    unsigned int c_esperado = conseguirArgsTipoPseudoOp(pso, esperado);
-
-    if(argc != c_esperado){
-        // Manejo de Error
-        char str[15];
-        comoStringPseudoOp(pso, str);
-        fprintf(stderr, "Argumentos invalidos para pseudo operacion %s. Esperaba %i argumento/s pero recibio %i\n", str, c_esperado, argc);
-        exit(1);
-    }
-
-    for (int i = 0; i < argc; i++){
-        if (esperado[i] != args[i]->tipo){
-            // Manejo de Error
-            char str_pso[5], str_esperado[10], str_recibido[10];
-            comoStringPseudoOp(pso, str_pso);
-            argTipoComoStr(esperado[i], str_esperado);
-            argTipoComoStr(args[i]->tipo, str_recibido);
-            fprintf(stderr, "Argumentos invalidos para operacion %s. en la posicion %i, esperaba tipo %s pero recibio tipo %s\n", str_pso, i+1, str_esperado, str_recibido);
             exit(1);
         }
     }
@@ -252,49 +226,4 @@ bin traducirLORI(Operacion op, SymTable tabla, addr pos){
 bin traducirLJMP(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 12);
-}
-
-void efectoORIG(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){
-    checkArgsPseudoOp(pso, args, argc);
-}
-
-void efectoFILL(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){
-    checkArgsPseudoOp(pso, args, argc);
-    unsigned int bin_int = *((unsigned int*) args[0]->valor);
-    /*
-    if (bin_int < 0U ||  < bin_int){
-        // Manejo de error
-        fprintf(stderr, "No se puede crear el literal %u. Fuera de rango 0-%u\n", bin_int, 0xFFFF);
-        exit(1);
-    }
-    */
-    addDataPrograma(prog, (bin) bin_int, label);
-}
-
-void efectoBLKW(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){
-    checkArgsPseudoOp(pso, args, argc);
-    int c_blocks = *((int*) args[0]->valor);
-    if (c_blocks < 1){
-        // Manejo de error
-        fprintf(stderr, ".blkw no puede reservar ua cantidad de %i\n", c_blocks);
-        exit(1);
-    }
-
-    debug_print("efectoBLKW: c_blocks = %i\n", c_blocks);
-    addDataPrograma(prog, (bin) 0, label);
-    c_blocks--;
-    for (; c_blocks > 0; c_blocks--){
-        debug_print("efectoBLKW: c_blocks = %i\n", c_blocks);
-        addDataPrograma(prog, (bin) 0, NULL);
-    }
-}
-
-void efectoEND(ConsPrograma prog, PseudoOp pso, char label[], Argumento args[], unsigned int argc){
-    if (label != NULL) {
-        // Manejo de error
-        fprintf(stderr, "No se admiten atiqutas que apunten a .end\n");
-        exit(1);
-    }
-    checkArgsPseudoOp(pso, args, argc);
-    prog->reached_end = true;
 }

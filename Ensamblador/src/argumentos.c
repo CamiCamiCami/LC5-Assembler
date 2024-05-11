@@ -27,7 +27,7 @@ Argumento initArgumentoEtiqueta(char etiqueta[]){
 }
 
 Argumento initArgumento(int tipo, void* valor){
-    if(tipo < 1 || 3 < tipo){
+    if(tipo != TIPO_NUMERO && tipo != TIPO_REGISTRO && tipo != TIPO_ETIQUETA){
         fprintf(stderr, "Mal tipo para Argumento, espera valores entre 1 y 3 pero recibio %i\n", tipo);
         exit(1);
     }

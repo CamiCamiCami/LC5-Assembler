@@ -1,6 +1,6 @@
 #include "utils.h"
 #include "instruccion.h"
-#include "pseudoop.h"
+#include "pseudoins.h"
 #include "argumentos.h"
 
 void comoStr(bin word, char repr[17]){
@@ -53,7 +53,7 @@ void argTipoComoStr(unsigned char tipo, char repr[10]){
 TipoToken encontrarTipoToken(Token tkn){
 	if (deStringInstruccion(tkn) != NULL_INS){
 		return INSTRUCCION;
-	} else if (deStringPseudoOp(tkn) != NULL_PSO){
+	} else if (deStringPseudoIns(tkn) != NULL_PSO){
 		return PSEUDOOP;
 	} else {
 		return ETIQUETA;

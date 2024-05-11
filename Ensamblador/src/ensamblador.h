@@ -9,6 +9,6 @@
 #include "symtable.h"
 #include "utils.h"
 #include "constructor_programa.h"
-#include "pseudoop.h"
+#include "pseudoins.h"
 
 

@@ -16,7 +16,7 @@ char *interpreta_args(int argc, char **argv){
     return argv[1];
 }
 
-void agregarOperacion(ConsPrograma prog, char label[], Token tkns[], int c_tokens){
+void agregarOperacion(ConsPrograma prog, char label[], Token tkns[], int c_tokens) {
 	if (c_tokens > 2){
 		// Manejo de Error
 		fprintf(stderr, "Mala cantidad de tokens. Esperaba 1-2 pero encontro %i\n", c_tokens);
@@ -27,20 +27,14 @@ void agregarOperacion(ConsPrograma prog, char label[], Token tkns[], int c_token
 	addOperacionPrograma(prog, op, label);
 }
 
-void agregarPseudoOp(ConsPrograma prog, char label[], Token tkns[], int c_tokens){
+void agregarPseudoOp(ConsPrograma prog, char label[], Token tkns[], int c_tokens) {
 	if (c_tokens > 2){
 		// Manejo de Error
 		fprintf(stderr, "Mala cantidad de tokens. Esperaba 1-2 pero encontro %i\n", c_tokens);
 		exit(1);
 	}
-
-	PseudoOp pso = deStringPseudoOp(tkns[0]);
-	int argc = 0;
-	Argumento* args = NULL;
-	if (c_tokens == 2) {
-		args = parsearArgumentos(tkns[1], &argc);
-	}
-	(efectoPseudoOp(pso))(prog, pso, label, args, argc);
+	
+	efectuarPseudoOp(prog, tkns, c_tokens, label);
 }
 
 #define ARCHIVO_SALIDA "../../../SimuladorCoba/miniPC/codigo.bin"

@@ -7,6 +7,7 @@
         "stdbool.h": "c",
         "ensamblador.h": "c",
         "string.h": "c",
-        "full_address.h": "c"
+        "full_address.h": "c",
+        "pseudoins.h": "c"
     }
 }
