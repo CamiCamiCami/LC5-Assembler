@@ -130,7 +130,7 @@ void addPointerPrograma(ConsPrograma prog, char puntero[], char label[]) {
         debug_print("addPointerPrograma: Encontro label %s sobre un literal\n", label);
     }
 
-    EntradaDato dato = initEntradaDato_Etiqueta(label);
+    EntradaDato dato = initEntradaDato_Etiqueta(puntero);
     pushCola(prog->data, dato);
     debug_print("addPointerPrograma: Literal agregado exitosamente\n");
 }

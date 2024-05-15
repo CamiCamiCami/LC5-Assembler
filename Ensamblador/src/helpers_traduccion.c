@@ -16,6 +16,21 @@ void checkArgsOperacion(Operacion op){
     int esperado[5];
     int c_esperado = conseguirArgsTipoInstruccion(ins, esperado);
 
+    char repr_op[10];
+    comoStringInstruccion(op->ins, repr_op);
+    debug_print("Chequeando operacion %s\n", repr_op);
+
+    for (int i = 0; i < c_esperado; i++){
+        char repr[50];
+        argTipoComoStr(esperado[i], repr);
+        debug_print("esperado[%i] = %s\n", i, repr);
+    }
+    for (int i = 0; i < c_arg; i++){
+        char repr[50];
+        argTipoComoStr(args[i]->tipo, repr);
+        debug_print("args[%i]->tipo = %s\n", i, repr);
+    }
+
     if(c_arg != c_esperado){
         // Manejo de Error
         char str[5];

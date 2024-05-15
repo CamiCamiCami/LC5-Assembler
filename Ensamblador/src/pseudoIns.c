@@ -7,8 +7,8 @@
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
-#define C_CODIGOS_PSEUDOOP 4
-static const char CODIGOS_PSEUDOOP[C_CODIGOS_PSEUDOOP][10] = {".orig", ".fill", ".blkw", ".end"};
+#define C_CODIGOS_PSEUDOOP 5
+static const char CODIGOS_PSEUDOOP[C_CODIGOS_PSEUDOOP][10] = {".orig", ".fill", ".blkw", ".stringz", ".end"};
 
 void checkArgs(PseudoIns psi, Argumento args[], unsigned int argc){
     ArgsTipo esperado[5];
@@ -95,7 +95,15 @@ void efectuarPseudoOp (ConsPrograma prog, Token tkns[], unsigned int c_tkns, cha
             addLiteralPrograma(prog, (bin) 0, NULL);
         }
         break;
+    case STRINGZ:   ; // <- El punto y como esta porque quiero declarar al inicio del case
+        char* str = args[0]->valor;
 
+        addLiteralPrograma(prog, (bin) str[0], label);
+        for (int i = 1; str[i] != '\0'; i++) {
+            addLiteralPrograma(prog, (bin) str[i], NULL);
+        }
+        addLiteralPrograma(prog, (bin) '\0', NULL);
+        break;
     case END:
         if (label != NULL) {
             // Manejo de error
@@ -115,6 +123,7 @@ void efectuarPseudoOp (ConsPrograma prog, Token tkns[], unsigned int c_tkns, cha
         freeArgumento(args[i]);
     }
 }
+
 
 
 PseudoIns deStringPseudoIns(char codigo[]){
@@ -150,6 +159,9 @@ unsigned int conseguirArgsTipoPseudoIns(PseudoIns psi, ArgsTipo args[5]) {
         return 1U;
     case BLKW:
         args[0] = TIPO_NUMERO;
+        return 1U;
+    case STRINGZ:
+        args[0] = TIPO_STRING;
         return 1U;
     case END:
         return 0U;

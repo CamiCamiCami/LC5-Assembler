@@ -40,6 +40,7 @@ enum __pseudoins{
     ORIG,
     FILL,
     BLKW,
+    STRINGZ,
     END
 };
 
