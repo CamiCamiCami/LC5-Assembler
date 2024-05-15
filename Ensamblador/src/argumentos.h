@@ -14,3 +14,4 @@ void printArgumento(Argumento arg);
 
 void toStringArgumento(Argumento arg, char* rtn);
 
+bool argCoincideTipo(ArgsTipo req_tipo, Argumento arg);

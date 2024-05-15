@@ -13,6 +13,8 @@
         lui         r0,0
         Lori        r0,0
 
+       .fill "pppp"
+
 loop    add         r0,r0,r1
         addi        r2,r2,-1
         brz         save

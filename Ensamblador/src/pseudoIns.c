@@ -4,6 +4,9 @@
 #include "constructor_programa.h"
 #include <ctype.h>
 
+#define DEBUG 1
+#define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
+
 #define C_CODIGOS_PSEUDOOP 4
 static const char CODIGOS_PSEUDOOP[C_CODIGOS_PSEUDOOP][10] = {".orig", ".fill", ".blkw", ".end"};
 
@@ -11,7 +14,18 @@ void checkArgs(PseudoIns psi, Argumento args[], unsigned int argc){
     ArgsTipo esperado[5];
     unsigned int c_esperado = conseguirArgsTipoPseudoIns(psi, esperado);
 
-    if(argc != c_esperado){
+    for (int i = 0; i < c_esperado; i++){
+        char repr[50];
+        argTipoComoStr(esperado[i], repr);
+        debug_print("esperado[%i] = %s\n", i, repr);
+    }
+    for (int i = 0; i < argc; i++){
+        char repr[50];
+        argTipoComoStr(args[i]->tipo, repr);
+        debug_print("args[%i]->tipo = %s\n", i, repr);
+    }
+
+    if(argc != c_esperado) {
         // Manejo de Error
         char str[15];
         comoStringPseudoIns(psi, str);
@@ -20,9 +34,9 @@ void checkArgs(PseudoIns psi, Argumento args[], unsigned int argc){
     }
 
     for (int i = 0; i < argc; i++){
-        if (!(esperado[i] & args[i]->tipo)){
+        if (!argCoincideTipo(esperado[i], args[i])){
             // Manejo de Error
-            char str_pso[5], str_esperado[10], str_recibido[10];
+            char str_pso[10], str_esperado[50], str_recibido[50];
             comoStringPseudoIns(psi, str_pso);
             argTipoComoStr(esperado[i], str_esperado);
             argTipoComoStr(args[i]->tipo, str_recibido);
