@@ -130,37 +130,47 @@ bin solveRelReference(SymTable table, addr pos, char label[], unsigned int size)
 
 bin traducirADD(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 5);
 }
 
 bin traducirSUB(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 5);
 }
 
 bin traducirAND(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 5);
 }
 
 bin traducirOR(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 5);
+}
+
+bin traducirNOT(Operacion op, SymTable tabla, addr pos){
+    checkArgsOperacion(op);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8);
+}
+
+bin traducirCLS(Operacion op, SymTable tabla, addr pos){
+    checkArgsOperacion(op);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11);
+}
+
+bin traducirSET(Operacion op, SymTable tabla, addr pos){
+    checkArgsOperacion(op);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11);
+}   
+
+bin traducirSLT(Operacion op, SymTable tabla, addr pos){
+    checkArgsOperacion(op);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 5);
 }
 
 bin traducirADDI(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
-}
-
-bin traducirANDI(Operacion op, SymTable tabla, addr pos){
-    checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatSHNum(op->args[2]->valor, op->args[3]->valor);
-}
-
-bin traducirORI(Operacion op, SymTable tabla, addr pos){
-    checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatSHNum(op->args[2]->valor, op->args[3]->valor);
 }
 
 bin traducirBRp(Operacion op, SymTable tabla, addr pos){
@@ -198,11 +208,6 @@ bin traducirRETI(Operacion op, SymTable tabla, addr pos){
     return conseguirBaseInstruccion(op->ins);
 }
 
-bin traducirNOT(Operacion op, SymTable tabla, addr pos){
-    checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8);
-}
-
 bin traducirJAL(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
     return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 12);
@@ -220,12 +225,12 @@ bin traducirST(Operacion op, SymTable tabla, addr pos){
 
 bin traducirLDR(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + solveRelReference(tabla, pos, op->args[2]->valor, 6);
 }
 
 bin traducirSTR(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 2);
+    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + solveRelReference(tabla, pos, op->args[2]->valor, 6);
 }
 
 bin traducirLUI(Operacion op, SymTable tabla, addr pos){
@@ -238,7 +243,7 @@ bin traducirLORI(Operacion op, SymTable tabla, addr pos){
     return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
-bin traducirLJMP(Operacion op, SymTable tabla, addr pos){
+bin traducirRET(Operacion op, SymTable tabla, addr pos) {
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 12);
+    return conseguirBaseInstruccion(op->ins);
 }

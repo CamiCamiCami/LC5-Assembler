@@ -67,7 +67,7 @@ int main(int argc, char **argv){
 			continue;
 		}
 		
-		switch (encontrarTipoToken(tkns[0])) {
+		switch (encontrarTipoPrimerToken(tkns[0])) {
 		case INSTRUCCION:
 			agregarOperacion(builder, NULL, tkns, c_tkns);
 			break;
@@ -75,7 +75,7 @@ int main(int argc, char **argv){
 			agregarPseudoOp(builder, NULL, tkns, c_tkns);
 			break;
 		case ETIQUETA:
-			switch (encontrarTipoToken(tkns[1])) {
+			switch (encontrarTipoPrimerToken(tkns[1])) {
 			case INSTRUCCION:
 				agregarOperacion(builder, tkns[0], tkns+1, c_tkns-1);
 				break;

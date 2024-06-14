@@ -7,7 +7,13 @@
 
 Operacion initOperacion(Token tkns[], int c_tkns){
 	Operacion op = malloc(sizeof(struct __operacion));
-    op->ins = deStringInstruccion(tkns[0]);
+    bool err;
+    op->ins = deStringInstruccion(tkns[0], &err);
+    if (err){
+        fprintf(stderr, "Codigo de operación invalido: %s\n", tkns[0]);
+        exit(1);
+    }
+    
     if (c_tkns >= 2) {
         op->args = parsearArgumentos(tkns[1], &(op->argc));
     } else {

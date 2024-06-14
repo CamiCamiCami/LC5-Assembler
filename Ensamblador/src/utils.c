@@ -66,10 +66,14 @@ void argTipoComoStr(ArgsTipo tipo, char repr[50]){
 	}
 }
 
-TipoToken encontrarTipoToken(Token tkn){
-	if (deStringInstruccion(tkn) != NULL_INS){
+TipoToken encontrarTipoPrimerToken(Token tkn){
+	bool err_parse_ins;
+	bool err_parse_psi;
+	deStringInstruccion(tkn, &err_parse_ins);
+	deStringPseudoIns(tkn, &err_parse_psi);
+	if (!err_parse_ins){
 		return INSTRUCCION;
-	} else if (deStringPseudoIns(tkn) != NULL_PSO){
+	} else if (!err_parse_psi){
 		return PSEUDOOP;
 	} else {
 		return ETIQUETA;

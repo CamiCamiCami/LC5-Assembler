@@ -28,7 +28,7 @@ ConsSalida initConstructorSalida(char path[], addr orig){
 void agregarConsSalida(ConsSalida cons, bin b) {
     if (cons->largo >= cons->alocado){
         int nuevo_alocado = cons->alocado + ALOCACION_PASO;
-        cons->contenido = realloc(cons->contenido, sizeof(bin) * ALOCACION_PASO);
+        cons->contenido = realloc(cons->contenido, sizeof(bin) * nuevo_alocado);
         cons->alocado = nuevo_alocado;
     }
 

@@ -1,7 +1,7 @@
 #include "utils.h"
 
 
-PseudoIns deStringPseudoIns(char codigo[]);
+PseudoIns deStringPseudoIns(char codigo[], bool* error);
 
 void comoStringPseudoIns(PseudoIns psi, char repr[]);
 

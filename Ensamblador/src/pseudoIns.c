@@ -7,8 +7,8 @@
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
-#define C_CODIGOS_PSEUDOOP 5
-static const char CODIGOS_PSEUDOOP[C_CODIGOS_PSEUDOOP][10] = {".orig", ".fill", ".blkw", ".stringz", ".end"};
+#define PRIMERA_PSI ORIG
+#define ULTIMA_PSI END
 
 void checkArgs(PseudoIns psi, Argumento args[], unsigned int argc){
     ArgsTipo esperado[5];
@@ -48,7 +48,13 @@ void checkArgs(PseudoIns psi, Argumento args[], unsigned int argc){
 
 
 void efectuarPseudoOp (ConsPrograma prog, Token tkns[], unsigned int c_tkns, char label[]){
-    PseudoIns psi = deStringPseudoIns(tkns[0]);
+    bool err;
+    PseudoIns psi = deStringPseudoIns(tkns[0], &err);
+    if (err) {
+        // Manejo de Error
+        fprintf(stderr, "No pudo parsear token %s como pseudoinstruccion\n", tkns[0]);
+        exit(1);
+    }
     Argumento* args = NULL;
     unsigned int argc = 0;
     if (c_tkns == 2) {
@@ -124,28 +130,52 @@ void efectuarPseudoOp (ConsPrograma prog, Token tkns[], unsigned int c_tkns, cha
     }
 }
 
-
-
-PseudoIns deStringPseudoIns(char codigo[]){
+PseudoIns deStringPseudoIns(char codigo[], bool* error){
 	char cpy[strlen(codigo)];
+    char repr[10];
 	strcpy(cpy, codigo);
 	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
 	
-    for(int i = 0; i < C_CODIGOS_PSEUDOOP; i++){
-        if(!strcmp(cpy, CODIGOS_PSEUDOOP[i])){
-            return i+1;
+    for(int i = PRIMERA_PSI; i <= ULTIMA_PSI; i++){
+        comoStringPseudoIns(i, repr);
+        if(!strcmp(cpy, repr)){
+            *error = false;
+            return i;
         }
     }
-    return NULL_INS;
+
+    *error = true;
+    return 0;
 }
 
 void comoStringPseudoIns(PseudoIns psi, char repr[]) {
-    const char* codigo = CODIGOS_PSEUDOOP[psi-1];
-    int i = 0;
-    for (; codigo[i]; i++){
-        repr[i] = codigo[i];
+    switch (psi) {
+    case ORIG:;
+        static const char code_orig[10] = ".orig";
+        strcpy(repr, code_orig);
+        break;
+    case FILL:;
+        static const char code_fill[10] = ".fill";
+        strcpy(repr, code_fill);
+        break;
+    case BLKW:;
+        static const char code_blwk[10] = ".blkw";
+        strcpy(repr, code_blwk);
+        break;
+    case STRINGZ:;
+        static const char code_stringz[10] = ".stringz";
+        strcpy(repr, code_stringz);
+        break;
+    case END:;
+        static const char code_end[10] = ".end";
+        strcpy(repr, code_end);
+        break;
+    default:
+        // Manejo de error
+        fprintf(stderr, "pseudo operacion inexistente. Esperaba un codigo 0-%i, recibio %i\n", ULTIMA_PSI, psi);
+        exit(1);
+        break;
     }
-    repr[i] = '\0';
 }
 
 
@@ -167,7 +197,7 @@ unsigned int conseguirArgsTipoPseudoIns(PseudoIns psi, ArgsTipo args[5]) {
         return 0U;
     default:
         // Manejo de error
-        fprintf(stderr, "pseudo operacion inexistente. Esperaba un codigo 1-%i, recibio %i\n", C_CODIGOS_PSEUDOOP, psi);
+        fprintf(stderr, "pseudo operacion inexistente. Esperaba un codigo 1-%i, recibio %i\n", ULTIMA_PSI, psi);
         exit(1);
         break;
     }

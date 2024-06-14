@@ -9,35 +9,34 @@
 #define MAX_ADDR (1 << 16)
 
 enum __instruccion{
-    NULL_INS = 0,
-	ADD,
-    SUB,
-    AND,
-    OR,
-    ADDI,
-    ANDI,
-    ORI,
-    BRp,
-    BRz,
-    BRn,
-    JR,
-    JALR,
-    TRAP,
-    RETI,
-    NOT,
-    JAL,         
-    LD,                                          
-    ST,
-    LDR,
-    STR,
-    LUI,
-    LORI,
-    LJMP,
+    IAND = 0,
+    IOR,
+	IADD,
+    INOT,
+    ICLS,
+    ISET,
+    ISUB,
+    ISLT,
+    IADDI,
+    ILUI,
+    ILORI,         
+    ILD,                                          
+    IST,
+    ILDR,
+    ISTR,
+    IBRp,
+    IBRz,
+    IBRn,
+    IJAL,
+    IJR,
+    IRET,
+    IJALR,
+    ITRAP,
+    IRETI
 };
 
 enum __pseudoins{
-    NULL_PSO = 0,
-    ORIG,
+    ORIG = 0,
     FILL,
     BLKW,
     STRINGZ,
@@ -57,9 +56,10 @@ enum __seccion {
 };
 
 enum __tipo_token {
-    INSTRUCCION,
+    INSTRUCCION = 0,
     PSEUDOOP,
-    ETIQUETA
+    ETIQUETA,
+    ARGUMENTOS
 };
 
 struct __registro{
@@ -143,6 +143,6 @@ typedef bin (*Traductor)(Operacion, SymTable, addr);
 void comoStr(bin bin, char str[17]);
 void intComoStr(int word, char repr[33]);
 void argTipoComoStr(ArgsTipo tipo, char repr[50]);
-TipoToken encontrarTipoToken(Token tkn);
+TipoToken encontrarTipoPrimerToken(Token tkn);
 
 #endif 

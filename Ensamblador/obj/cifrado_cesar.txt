@@ -1,0 +1,27 @@
+			.orig		0
+
+llave		.fill		1
+msg			.stringz	"Hola Mundo"
+codigo		.blkw		11
+loop_dir	.fill		loop
+
+
+			cls			r0
+
+			ld			r1,loop_dir
+
+			ld			r3,llave
+
+			cls			r7
+		
+		
+loop		ldr			r0,r7,msg
+			brz			exit
+			i.add			r0,r0,r3
+			str			r0,r7,codigo
+			i.addi		r7,r7,1
+			jr			r1
+
+exit		str			r0,r7,codigo
+			trap 		r0
+		
