@@ -3,7 +3,7 @@
 #include "helpers_traduccion.h"
 
 #define PRIMERA_INS IAND
-#define ULTIMA_INS IRETI
+#define ULTIMA_INS IRTI
 #define CANT_CODIGOS_INS 24
 
 
@@ -22,17 +22,17 @@ void comoStringInstruccion(Instruccion ins, char str[10]){
         static const char code_add[10] = "i.add";
         strcpy(str, code_add);
         break;
-    case INOT:;
-        static const char code_not[10] = "not";
-        strcpy(str, code_not);
+    case INOR:;
+        static const char code_nor[10] = "nor";
+        strcpy(str, code_nor);
         break;
-    case ICLS:;
-        static const char code_cls[10] = "cls";
-        strcpy(str, code_cls);
+    case IANN:;
+        static const char code_ann[10] = "ann";
+        strcpy(str, code_ann);
         break;
-    case ISET:;
-        static const char code_set[10] = "set";
-        strcpy(str, code_set);
+    case IXOR:;
+        static const char code_xor[10] = "xor";
+        strcpy(str, code_xor);
         break;
     case ISUB:;
         static const char code_sub[10] = "i.sub";
@@ -82,6 +82,22 @@ void comoStringInstruccion(Instruccion ins, char str[10]){
         static const char code_brn[10] = "brn";
         strcpy(str, code_brn);
         break;
+    case IBRnz:;
+        static const char code_brnz[10] = "brnz";
+        strcpy(str, code_brnz);
+        break;
+    case IBRnp:;
+        static const char code_brnp[10] = "brnp";
+        strcpy(str, code_brnp);
+        break;
+    case IBRzp:;
+        static const char code_brzp[10] = "brzp";
+        strcpy(str, code_brzp);
+        break;
+    case IJUMP:;
+        static const char code_jump[10] = "jump";
+        strcpy(str, code_jump);
+        break;
     case IJAL:;
         static const char code_jal[10] = "jal";
         strcpy(str, code_jal);
@@ -89,10 +105,6 @@ void comoStringInstruccion(Instruccion ins, char str[10]){
     case IJR:;
         static const char code_jr[10] = "jr";
         strcpy(str, code_jr);
-        break;
-    case IRET:;
-        static const char code_ret[10] = "ret";
-        strcpy(str, code_ret);
         break;
     case IJALR:;
         static const char code_jalr[10] = "jalr";
@@ -102,8 +114,8 @@ void comoStringInstruccion(Instruccion ins, char str[10]){
         static const char code_trap[10] = "trap";
         strcpy(str, code_trap);
         break;
-    case IRETI:;
-        static const char code_reti[10] = "reti";
+    case IRTI:;
+        static const char code_reti[10] = "rti";
         strcpy(str, code_reti);
         break;  
     default:
@@ -149,16 +161,21 @@ int conseguirArgsTipoInstruccion(Instruccion INS, int args[5]){
         args[1] = TIPO_REGISTRO;
         args[2] = TIPO_REGISTRO;
         return 3;
-    case INOT:
+    case INOR:
         args[0] = TIPO_REGISTRO;
         args[1] = TIPO_REGISTRO;
-        return 2;
-    case ICLS:
+        args[2] = TIPO_REGISTRO;
+        return 3;
+    case IANN:
         args[0] = TIPO_REGISTRO;
-        return 1;
-    case ISET:
+        args[1] = TIPO_REGISTRO;
+        args[2] = TIPO_REGISTRO;
+        return 3;
+    case IXOR:
         args[0] = TIPO_REGISTRO;
-        return 1;
+        args[1] = TIPO_REGISTRO;
+        args[2] = TIPO_REGISTRO;
+        return 3;
     case ISUB:
         args[0] = TIPO_REGISTRO;
         args[1] = TIPO_REGISTRO;
@@ -193,12 +210,12 @@ int conseguirArgsTipoInstruccion(Instruccion INS, int args[5]){
     case ILDR:
         args[0] = TIPO_REGISTRO;
         args[1] = TIPO_REGISTRO;
-        args[2] = TIPO_ETIQUETA;
+        args[2] = TIPO_NUMERO;
         return 3;
     case ISTR:
         args[0] = TIPO_REGISTRO;
         args[1] = TIPO_REGISTRO;
-        args[2] = TIPO_ETIQUETA;
+        args[2] = TIPO_NUMERO;
         return 3;
     case IBRp:
         args[0] = TIPO_ETIQUETA;
@@ -209,21 +226,31 @@ int conseguirArgsTipoInstruccion(Instruccion INS, int args[5]){
     case IBRn:
         args[0] = TIPO_ETIQUETA;
         return 1;
+    case IBRnz:
+        args[0] = TIPO_ETIQUETA;
+        return 1;
+    case IBRnp:
+        args[0] = TIPO_ETIQUETA;
+        return 1;
+    case IBRzp:
+        args[0] = TIPO_ETIQUETA;
+        return 1;
+    case IJUMP:
+        args[0] = TIPO_ETIQUETA;
+        return 1;
     case IJAL:
         args[0] = TIPO_ETIQUETA;
         return 1;
     case IJR:
         args[0] = TIPO_REGISTRO;
         return 1;
-    case IRET:
-        return 0;
     case IJALR:
         args[0] = TIPO_REGISTRO;
         return 1;
     case ITRAP:
         args[0] = TIPO_REGISTRO;
         return 1;
-    case IRETI:
+    case IRTI:
         return 0;
     default:
         fprintf(stderr, "Instruccion inexistente. Esperaba un codigo 1-%i, recibio %i\n", CANT_CODIGOS_INS, INS);
@@ -240,11 +267,11 @@ bin conseguirBaseInstruccion(Instruccion INS){
         return 0b0001000000000001;
     case IADD:
         return 0b0001000000000010;
-    case INOT:
+    case INOR:
         return 0b0001000000000011;
-    case ICLS:
+    case IANN:
         return 0b0001000000000100;
-    case ISET:
+    case IXOR:
         return 0b0001000000000101;
     case ISUB:
         return 0b0001000000000110;
@@ -253,9 +280,9 @@ bin conseguirBaseInstruccion(Instruccion INS){
     case IADDI:
         return 0b0101000000000000;
     case ILUI:
-        return 0b0111000000000000;
+        return 0b0100000000000000;
     case ILORI:
-        return 0b0111000100000000;
+        return 0b0100000100000000;
     case ILD:
         return 0b0010000000000000;
     case IST:
@@ -265,23 +292,29 @@ bin conseguirBaseInstruccion(Instruccion INS){
     case ISTR:
         return 0b0111000000000000;
     case IBRp:
-        return 0b0000010000000000;
+        return 0b0000001000000000;
     case IBRz:
-        return 0b0000000000000000;
+        return 0b0000010000000000;
     case IBRn:
         return 0b0000100000000000;
-    case IJAL:
-        return 0b1000000000000000;
+    case IBRnz:
+        return 0b0000110000000000;
+    case IBRnp:
+        return 0b0000101000000000;
+    case IBRzp:
+        return 0b0000011000000000;
+    case IJUMP:
+        return 0b1000100000000000;
     case IJR:
-        return 0b1010000000000000;
-    case IRET:
-        return 0b1010000111000000;
+        return 0b1000000000000000;
+    case IJAL:
+        return 0b1001100000000000;
     case IJALR:
-        return 0b1010010000000000;
+        return 0b1001000000000000;
     case ITRAP:
-        return 0b1010100000000000;
-    case IRETI:
-        return 0b1010110000000000;
+        return 0b1010000000000000;
+    case IRTI:
+        return 0b1011000000000000;
     default:
         fprintf(stderr, "Instruccion base INS inexistente. Esperaba un codigo 1-%i, recibio %i\n", CANT_CODIGOS_INS, INS);
         exit(1);
@@ -293,21 +326,21 @@ bin conseguirBaseInstruccion(Instruccion INS){
 Traductor conseguirTraductorInstruccion(Instruccion INS){
 	switch (INS) {
         case IAND:
-	        return traducirAND;
+	        return traducirArimetica;
 	    case IOR:
-	        return traducirOR;
+	        return traducirArimetica;
 		case IADD:
-        	return traducirADD;
-        case INOT:
-	        return traducirNOT;
-        case ICLS:
-            return traducirCLS;
-        case ISET:
-            return traducirSET;
+        	return traducirArimetica;
+        case INOR:
+	        return traducirArimetica;
+        case IANN:
+            return traducirArimetica;
+        case IXOR:
+            return traducirArimetica;
 	    case ISUB:
-	        return traducirSUB;
+	        return traducirArimetica;
         case ISLT:
-            return traducirSLT;
+            return traducirArimetica;
 	    case IADDI:
 	        return traducirADDI;
         case ILUI:
@@ -323,23 +356,29 @@ Traductor conseguirTraductorInstruccion(Instruccion INS){
 	    case ISTR:
 	        return traducirSTR;
 	    case IBRp:
-	        return traducirBRp;
+	        return traducirBranch;
 	    case IBRz:
-	        return traducirBRz;
+	        return traducirBranch;
 	    case IBRn:
-	        return traducirBRn;
-        case IJAL:
-	        return traducirJAL;
+	        return traducirBranch;
+        case IBRnz:
+	        return traducirBranch;
+	    case IBRnp:
+	        return traducirBranch;
+	    case IBRzp:
+	        return traducirBranch;
+        case IJUMP:
+            return traducirJUMP;
 	    case IJR:
 	        return traducirJR;
-        case IRET:
-            return traducirRET;
+        case IJAL:
+	        return traducirJAL;
 	    case IJALR:
 	        return traducirJALR;
 	    case ITRAP:
 	        return traducirTRAP;
-	    case IRETI:
-	        return traducirRETI;
+	    case IRTI:
+	        return traducirRTI;
 	    default:
 	        fprintf(stderr, "Instruccion base INS inexistente. Esperaba un codigo 1-%i, recibio %i\n", CANT_CODIGOS_INS, INS);
 			exit(1);

@@ -31,6 +31,7 @@ bin traducirOperacion(Operacion op, SymTable tabla, addr pos){
 void freeOperacion(Operacion op) {
     for (int i = 0; i < op->argc; i++)
         freeArgumento(op->args[i]);
+    free(op->args);
     free(op);
 }
 

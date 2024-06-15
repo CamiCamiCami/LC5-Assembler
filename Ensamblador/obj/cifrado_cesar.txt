@@ -2,26 +2,32 @@
 
 llave		.fill		1
 msg			.stringz	"Hola Mundo"
+msg_dir		.fill		msg
 codigo		.blkw		11
-loop_dir	.fill		loop
+codigo_dir	.fill		codigo
 
 
-			cls			r0
-
-			ld			r1,loop_dir
+			lui			r0,0
+			lori		r0,0
 
 			ld			r3,llave
 
-			cls			r7
-		
-		
-loop		ldr			r0,r7,msg
-			brz			exit
-			i.add			r0,r0,r3
-			str			r0,r7,codigo
-			i.addi		r7,r7,1
-			jr			r1
+			ld			r4,msg_dir
 
-exit		str			r0,r7,codigo
+			ld			r5,codigo_dir
+
+			lui			r7,0
+			lori		r7,0
+
+
+loop		ldr			r0,r4,0
+			brz			exit
+			i.add		r0,r0,r3
+			str			r0,r5,0
+			i.addi		r4,r4,1
+			i.addi		r5,r5,1
+			jump		loop
+
+exit		str			r0,r5,0
 			trap 		r0
 		

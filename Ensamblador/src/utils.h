@@ -12,9 +12,9 @@ enum __instruccion{
     IAND = 0,
     IOR,
 	IADD,
-    INOT,
-    ICLS,
-    ISET,
+    INOR,
+    IANN,
+    IXOR,
     ISUB,
     ISLT,
     IADDI,
@@ -24,15 +24,18 @@ enum __instruccion{
     IST,
     ILDR,
     ISTR,
-    IBRp,
-    IBRz,
     IBRn,
-    IJAL,
+    IBRz,
+    IBRp,
+    IBRnz,
+    IBRnp,
+    IBRzp,
+    IJUMP,
     IJR,
-    IRET,
+    IJAL,
     IJALR,
     ITRAP,
-    IRETI
+    IRTI
 };
 
 enum __pseudoins{
@@ -67,10 +70,7 @@ struct __registro{
 };
 
 struct __argumento {
-	// tipo = 1 -> int*     (Numero constante)
-    // tipo = 2 -> Registro (Registro 0-7)
-    // tipo = 3 -> char*    (Etiqueta)
-    unsigned char tipo;
+    enum __tipo_args tipo;
     void* valor;
 };
 

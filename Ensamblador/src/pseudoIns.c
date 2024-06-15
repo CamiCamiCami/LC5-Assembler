@@ -128,6 +128,7 @@ void efectuarPseudoOp (ConsPrograma prog, Token tkns[], unsigned int c_tkns, cha
     for (int i = 0; i < argc; i++) {
         freeArgumento(args[i]);
     }
+    free(args);
 }
 
 PseudoIns deStringPseudoIns(char codigo[], bool* error){
