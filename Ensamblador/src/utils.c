@@ -1,6 +1,6 @@
 #include "utils.h"
 #include "instruccion.h"
-#include "pseudoins.h"
+#include "pseudoIns.h"
 #include "argumentos.h"
 
 void comoStr(bin word, char repr[17]){

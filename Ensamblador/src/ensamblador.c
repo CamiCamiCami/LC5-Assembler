@@ -36,8 +36,8 @@ void agregarPseudoOp(ConsPrograma prog, char label[], Token tkns[], int c_tokens
 	
 	efectuarPseudoOp(prog, tkns, c_tokens, label);
 }
-
-#define ARCHIVO_SALIDA "../../../SimuladorCoba/miniPC/codigo.bin"
+	
+#define ARCHIVO_SALIDA "../../programas/programa.bin"
 
 int main(int argc, char **argv){
     debug_print("main: Empieza el programa\n");

@@ -7,8 +7,8 @@
 #include "tokens.h"
 #include "operacion.h"
 #include "symtable.h"
+#include "pseudoIns.h"
 #include "utils.h"
 #include "constructor_programa.h"
-#include "pseudoins.h"
 
 

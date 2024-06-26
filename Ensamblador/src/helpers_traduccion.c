@@ -33,7 +33,7 @@ void checkArgsOperacion(Operacion op){
 
     if(c_arg != c_esperado){
         // Manejo de Error
-        char str[5];
+        char str[10];
         comoStringInstruccion(op->ins, str);
         fprintf(stderr, "Argumentos invalidos para opracion %s. Esperaba %i argumento/s pero recibio %i\n", str, c_esperado, c_arg);
         exit(1);
@@ -42,7 +42,7 @@ void checkArgsOperacion(Operacion op){
     for (int i = 0; i < c_esperado; i++){
         if (!(esperado[i] & args[i]->tipo)){
             // Manejo de Error
-            char str_ins[5], str_esperado[10], str_recibido[10];
+            char str_ins[10], str_esperado[50], str_recibido[50];
             comoStringInstruccion(op->ins, str_ins);
             argTipoComoStr(esperado[i], str_esperado);
             argTipoComoStr(args[i]->tipo, str_recibido);
