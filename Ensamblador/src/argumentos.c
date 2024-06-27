@@ -3,41 +3,7 @@
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
-Argumento initArgumentoString(char str[]){
-    // Quita los "" del string
-    str += 1;
-    str[strlen(str)-1] = '\0';
-
-    char* ptr = malloc(sizeof(char) * (strlen(str) + 1));
-    strcpy(ptr, str);
-
-    return initArgumento(TIPO_STRING, ptr);
-}
-
-Argumento initArgumentoNumero(int n){
-    int* ptr = malloc(sizeof(int));
-    *ptr = n;
-    return initArgumento(TIPO_NUMERO, ptr);
-}
-
-Argumento initArgumentoRegistro(int n_reg){
-    if(n_reg < 0 || 7 < n_reg){
-        fprintf(stderr, "Sintaxis invalidad, Numero de registro fuera de rango (0-7) (Recibio %i)", n_reg);
-        exit(1);
-    }
-
-    Registro r = malloc(sizeof(struct __registro));
-    r->NUMERO = n_reg;
-    return initArgumento(TIPO_REGISTRO, r);
-}
-
-Argumento initArgumentoEtiqueta(char etiqueta[]){
-    char* ptr = malloc((sizeof(char) * strlen(etiqueta)) + 1);
-    strcpy(ptr, etiqueta);
-    return initArgumento(TIPO_ETIQUETA, ptr);
-}
-
-Argumento initArgumento(int tipo, void* valor){
+Argumento internalInitArgumento(int tipo, void* valor){
     if(tipo != TIPO_NUMERO && tipo != TIPO_REGISTRO && tipo != TIPO_ETIQUETA && tipo != TIPO_STRING){
         fprintf(stderr, "Mal tipo para Argumento, recibio %i\n", tipo);
         exit(1);
@@ -48,7 +14,41 @@ Argumento initArgumento(int tipo, void* valor){
     return arg;
 }
 
-Argumento _parsearArgumento(char token[]){
+Argumento initArgumentoString(char str[]){
+    // Quita los "" del string
+    str += 1;
+    str[strlen(str)-1] = '\0';
+
+    char* ptr = malloc(sizeof(char) * (strlen(str) + 1));
+    strcpy(ptr, str);
+
+    return internalInitArgumento(TIPO_STRING, ptr);
+}
+
+Argumento initArgumentoNumero(int n){
+    int* ptr = malloc(sizeof(int));
+    *ptr = n;
+    return internalInitArgumento(TIPO_NUMERO, ptr);
+}
+
+Argumento initArgumentoRegistro(int n_reg){
+    if(n_reg < 0 || 7 < n_reg){
+        fprintf(stderr, "Sintaxis invalidad, Numero de registro fuera de rango (0-7) (Recibio %i)", n_reg);
+        exit(1);
+    }
+
+    Registro r = malloc(sizeof(struct __registro));
+    r->NUMERO = n_reg;
+    return internalInitArgumento(TIPO_REGISTRO, r);
+}
+
+Argumento initArgumentoEtiqueta(char etiqueta[]){
+    char* ptr = malloc((sizeof(char) * strlen(etiqueta)) + 1);
+    strcpy(ptr, etiqueta);
+    return internalInitArgumento(TIPO_ETIQUETA, ptr);
+}
+
+Argumento initArgumento(Token token){
     if (token[0] == '\0'){
         // Manejo de Error
         fprintf(stderr, "No se puede parsear un token vacio.\n");
@@ -98,7 +98,7 @@ Argumento _parsearArgumento(char token[]){
     return initArgumentoEtiqueta(token);
 }
 
-Argumento* parsearArgumentos(char raw[], int* argc){
+/*Argumento* parsearArgumentos(char raw[], int* argc){
     debug_print("parsearArgumentos: Parseando %s\n", raw);
     const int MAX_TOKENS = 5;
     char* tokens[MAX_TOKENS];
@@ -123,7 +123,7 @@ Argumento* parsearArgumentos(char raw[], int* argc){
 	*argc = c_tokens;
     debug_print("parsearArgumentos: Tokens parseados\n");
     return args;
-}
+}*/
 
 void freeArgumento(Argumento arg){
     free(arg->valor);
@@ -140,14 +140,17 @@ void* valorArgumento(Argumento arg){
 
 void printArgumento(Argumento arg){
     switch (arg->tipo) {
-    case 1:
+    case TIPO_NUMERO:
         printf("Nro %i\n", *((int*)arg->valor));
         break;
-    case 2:
+    case TIPO_REGISTRO:
         printf("Registro %i\n", ((Registro)arg->valor)->NUMERO);
         break;
-    case 3:
+    case TIPO_ETIQUETA:
         printf("Etiqueta %s\n", ((char*)arg->valor));
+        break;
+    case TIPO_STRING:
+        printf("String %s\n", ((char*)arg->valor));
         break;
     default:
         fprintf(stderr, "Argumento con tipo ilegal %i. Rango esperado 1-3\n", arg->tipo);
@@ -161,14 +164,17 @@ bool argCoincideTipo(ArgsTipo req_tipo, Argumento arg) {
 
 void toStringArgumento(Argumento arg, char* rtn){
     switch (arg->tipo) {
-    case 1:
+    case TIPO_NUMERO:
         sprintf(rtn, "Nro %i\n", *((int*)arg->valor));
         break;
-    case 2:
+    case TIPO_REGISTRO:
         sprintf(rtn, "Registro %i\n", ((Registro)arg->valor)->NUMERO);
         break;
-    case 3:
+    case TIPO_ETIQUETA:
         sprintf(rtn, "Etiqueta %s\n", ((char*)arg->valor));
+        break;
+    case TIPO_STRING:
+        sprintf(rtn, "String %s\n", ((char*)arg->valor));
         break;
     default:
         fprintf(stderr, "Argumento con tipo ilegal %i. Rango esperado 1-3\n", arg->tipo);

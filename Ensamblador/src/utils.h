@@ -1,5 +1,5 @@
-#ifndef TIPOS
-#define TIPOS
+#ifndef UTILS_COMPILADOR
+#define UTILS_COMPILADOR
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -7,36 +7,6 @@
 #include <string.h>
 
 #define MAX_ADDR (1 << 16)
-
-enum __instruccion{
-    IAND = 0,
-    IOR,
-	IADD,
-    INOR,
-    IANN,
-    IXOR,
-    ISUB,
-    ISLT,
-    IADDI,
-    ILUI,
-    ILORI,         
-    ILD,                                          
-    IST,
-    ILDR,
-    ISTR,
-    IBRn,
-    IBRz,
-    IBRp,
-    IBRnz,
-    IBRnp,
-    IBRzp,
-    IJUMP,
-    IJR,
-    IJAL,
-    IJALR,
-    ITRAP,
-    IRTI
-};
 
 enum __pseudoins{
     ORIG = 0,
@@ -113,14 +83,13 @@ struct __constructor_programa {
 };
 
 struct __operacion{
-    enum __instruccion ins;
+    struct __instruccion* ins;
     struct __argumento** args;
     int argc;
 };
 
 
 typedef char* Token;
-typedef enum __instruccion Instruccion;
 typedef enum __seccion Seccion;
 typedef enum __pseudoins PseudoIns;
 typedef enum __tipo_args ArgsTipo;
@@ -133,6 +102,7 @@ typedef struct __argumento* Argumento;
 typedef struct __registro *Registro;
 typedef struct __symbol_table* SymTable;
 typedef struct __full_address* FullAddr;
+typedef struct __instruccion* Instruccion;
 typedef struct __operacion* Operacion;
 typedef struct __constructor_salida* ConsSalida;
 typedef struct __constructor_programa* ConsPrograma;
@@ -140,9 +110,47 @@ typedef unsigned short bin;
 typedef unsigned short addr;
 typedef bin (*Traductor)(Operacion, SymTable, addr);
 
+void initInstrucciones();
 void comoStr(bin bin, char str[17]);
 void intComoStr(int word, char repr[33]);
 void argTipoComoStr(ArgsTipo tipo, char repr[50]);
+Instruccion deStringInstruccion(char token[], bool* error);
 TipoToken encontrarTipoPrimerToken(Token tkn);
+
+struct __instruccion {
+    char name[10];
+    int args_tipos[3];
+    int argc;
+    unsigned short base;
+    Traductor traductor;
+};
+
+Instruccion AND;
+Instruccion OR;
+Instruccion ADD;
+Instruccion NOR;
+Instruccion ANN;
+Instruccion XOR;
+Instruccion SUB;
+Instruccion SLT;
+Instruccion ADDI;
+Instruccion LUI;
+Instruccion LORI;
+Instruccion LD;
+Instruccion ST;
+Instruccion LDR;
+Instruccion STR;
+Instruccion BRn;
+Instruccion BRz;
+Instruccion BRp;
+Instruccion BRnz;
+Instruccion BRnp;
+Instruccion BRzp;
+Instruccion JUMP;
+Instruccion JR;
+Instruccion JALR;
+Instruccion JAL;
+Instruccion TRAP;
+Instruccion RTI;
 
 #endif 

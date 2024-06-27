@@ -47,20 +47,7 @@ void checkArgs(PseudoIns psi, Argumento args[], unsigned int argc){
 }
 
 
-void efectuarPseudoOp (ConsPrograma prog, Token tkns[], unsigned int c_tkns, char label[]){
-    bool err;
-    PseudoIns psi = deStringPseudoIns(tkns[0], &err);
-    if (err) {
-        // Manejo de Error
-        fprintf(stderr, "No pudo parsear token %s como pseudoinstruccion\n", tkns[0]);
-        exit(1);
-    }
-    Argumento* args = NULL;
-    unsigned int argc = 0;
-    if (c_tkns == 2) {
-        args = parsearArgumentos(tkns[1], &argc);
-    }
-
+void efectuarPseudoOp (ConsPrograma prog, PseudoIns psi, Argumento args[], int argc, char label[]) {
     checkArgs(psi, args, argc);
 
     switch (psi) {
@@ -124,11 +111,6 @@ void efectuarPseudoOp (ConsPrograma prog, Token tkns[], unsigned int c_tkns, cha
         fprintf(stderr, "Pseudo Instruccion invalida con codigo %i\n", psi);
         exit(1);
     }
-
-    for (int i = 0; i < argc; i++) {
-        freeArgumento(args[i]);
-    }
-    free(args);
 }
 
 PseudoIns deStringPseudoIns(char codigo[], bool* error){

@@ -1,7 +1,7 @@
 #include "helpers_traduccion.h"
 #include "operacion.h"
-#include "instruccion.h"
 #include "symtable.h"
+#include "argumentos.h"
 #include "full_address.h"
 #include "constructor_programa.h"
 
@@ -13,12 +13,13 @@ void checkArgsOperacion(Operacion op){
     Argumento* args = op->args;
     int c_arg = op->argc;
 
-    int esperado[5];
-    int c_esperado = conseguirArgsTipoInstruccion(ins, esperado);
+    int* esperado = ins->args_tipos;
+    int c_esperado = ins->argc;
 
-    char repr_op[10];
-    comoStringInstruccion(op->ins, repr_op);
-    debug_print("Chequeando operacion %s\n", repr_op);
+    debug_print("Chequeando operacion %s\n", ins->name);
+    
+    for (int i = 0; i < c_arg; i++)
+        printArgumento(args[i]);
 
     for (int i = 0; i < c_esperado; i++){
         char repr[50];
@@ -26,6 +27,7 @@ void checkArgsOperacion(Operacion op){
         debug_print("esperado[%i] = %s\n", i, repr);
     }
     for (int i = 0; i < c_arg; i++){
+        debug_print("%i | ", args[i]->tipo);
         char repr[50];
         argTipoComoStr(args[i]->tipo, repr);
         debug_print("args[%i]->tipo = %s\n", i, repr);
@@ -33,20 +35,17 @@ void checkArgsOperacion(Operacion op){
 
     if(c_arg != c_esperado){
         // Manejo de Error
-        char str[10];
-        comoStringInstruccion(op->ins, str);
-        fprintf(stderr, "Argumentos invalidos para opracion %s. Esperaba %i argumento/s pero recibio %i\n", str, c_esperado, c_arg);
+        fprintf(stderr, "Argumentos invalidos para opracion %s. Esperaba %i argumento/s pero recibio %i\n", ins->name, c_esperado, c_arg);
         exit(1);
     }
 
     for (int i = 0; i < c_esperado; i++){
         if (!(esperado[i] & args[i]->tipo)){
             // Manejo de Error
-            char str_ins[10], str_esperado[50], str_recibido[50];
-            comoStringInstruccion(op->ins, str_ins);
+            char str_esperado[50], str_recibido[50];
             argTipoComoStr(esperado[i], str_esperado);
             argTipoComoStr(args[i]->tipo, str_recibido);
-            fprintf(stderr, "Argumentos invalidos para operacion %s. en la posicion %i, esperaba tipo %s pero recibio tipo %s\n", str_ins, i+1, str_esperado, str_recibido);
+            fprintf(stderr, "Argumentos invalidos para operacion %s. en la posicion %i, esperaba tipo %s pero recibio tipo %s\n", op->ins->name, i+1, str_esperado, str_recibido);
             exit(1);
         }
     }
@@ -130,7 +129,7 @@ bin solveRelReference(SymTable table, addr pos, char label[], unsigned int size)
 
 bin traducirArimetica(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 5);
+    return op->ins->base + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 5);
 }
 
 /*
@@ -171,12 +170,12 @@ bin traducirSLT(Operacion op, SymTable tabla, addr pos){
 
 bin traducirADDI(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
+    return op->ins->base + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
 }
 
 bin traducirBranch(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 9);
+    return op->ins->base + solveRelReference(tabla, pos, op->args[0]->valor, 9);
 }
 
 /*
@@ -187,81 +186,81 @@ bin traducirBRp(Operacion op, SymTable tabla, addr pos){
 
 bin traducirBRz(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 10);
+    return op->ins->base + solveRelReference(tabla, pos, op->args[0]->valor, 10);
 }
 
 bin traducirBRn(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 10);
+    return op->ins->base + solveRelReference(tabla, pos, op->args[0]->valor, 10);
 }
 
 */
 
 bin traducirJUMP(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 11);
+    return op->ins->base + solveRelReference(tabla, pos, op->args[0]->valor, 11);
 }
 
 bin traducirJR(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 8);
+    return op->ins->base + shiftReg(op->args[0]->valor, 8);
 }
 
 bin traducirJALR(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 8);
+    return op->ins->base + shiftReg(op->args[0]->valor, 8);
 }
 
 bin traducirTRAP(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 8);
+    return op->ins->base + shiftReg(op->args[0]->valor, 8);
 }
 
 /*
 
 bin traducirRETI(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins);
+    return op->ins->base;
 }
 
 */
 
 bin traducirJAL(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + solveRelReference(tabla, pos, op->args[0]->valor, 11);
+    return op->ins->base + solveRelReference(tabla, pos, op->args[0]->valor, 11);
 }
 
 bin traducirLD(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, pos, op->args[1]->valor, 9);
+    return op->ins->base + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, pos, op->args[1]->valor, 9);
 }
 
 bin traducirST(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, pos, op->args[1]->valor, 9);
+    return op->ins->base + shiftReg(op->args[0]->valor, 11) + solveRelReference(tabla, pos, op->args[1]->valor, 9);
 }
 
 bin traducirLDR(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
+    return op->ins->base + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
 }
 
 bin traducirSTR(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
+    return op->ins->base + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
 }
 
 bin traducirLUI(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
+    return op->ins->base + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
 bin traducirLORI(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins) + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
+    return op->ins->base + shiftReg(op->args[0]->valor, 11) + formatNum(op->args[1]->valor, 8);
 }
 
 bin traducirRTI(Operacion op, SymTable tabla, addr pos) {
     checkArgsOperacion(op);
-    return conseguirBaseInstruccion(op->ins);
+    return op->ins->base;
 }

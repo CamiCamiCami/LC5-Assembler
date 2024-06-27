@@ -5,7 +5,7 @@
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
 bool esEspacio(char c){
-    return (c == ' ' || c == '\t' || c <= (char)31);
+    return (c == ' ' || c == '\t' || c == ',' || c <= (char)31);
 }
 
 Token initToken(char token[]){
@@ -60,7 +60,7 @@ char decode_escape(char escaped){
 }
 
 // Mayor cantidad de tokens que espera encontrar en una linea
-#define MAX_TOKENS 3
+#define MAX_TOKENS 5
 
 // Devuelve la cantidad de tokens encontrados, devuelve los tokens
 Token* parsearTokens(char linea[], int* c_tkn){

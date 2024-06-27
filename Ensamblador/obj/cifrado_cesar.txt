@@ -29,5 +29,5 @@ loop		ldr			r0,r4,0
 			jump		loop
 
 exit		str			r0,r5,0
-			trap 		r0
+			trap 		0
 		

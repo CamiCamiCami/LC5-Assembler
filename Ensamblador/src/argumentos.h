@@ -1,8 +1,8 @@
 #include "utils.h"
 
-Argumento initArgumento(int tipo, void* valor);
+Argumento initArgumento(Token tkn);
 
-Argumento* parsearArgumentos(char raw[], int* argc);
+//Argumento* parsearArgumentos(char raw[], int* argc);
 
 void freeArgumento(Argumento arg);
 
