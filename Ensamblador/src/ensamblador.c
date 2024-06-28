@@ -117,8 +117,9 @@ int main(int argc, char **argv){
 		int c_tkns;
 		Token* tkns = parsearTokens(linea, &c_tkns);
 		debug_print("main: Encontro %i tokens\n", c_tkns);
-	    for (int i = 0; i < c_tkns; i++)
-        	debug_print("main: Tokens[%i] = %s\n", i, tkns[i]);
+	    for (int i = 0; i < c_tkns; i++) {
+			debug_print("main: Tokens[%i] = %s\n", i, tkns[i]);
+		}
 		
 		if (c_tkns == 0){
 			debug_print("main: linea vacia, saltada\n");

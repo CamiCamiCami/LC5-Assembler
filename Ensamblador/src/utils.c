@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 
-Instruccion initInstruccion(char name[10], int argc, int argstipos[3], bin base, Traductor traductor){
+Instruccion initInstruccion(char name[], int argc, int argstipos[], bin base, Traductor traductor){
     Instruccion new = malloc(sizeof(struct __instruccion));
     strcpy(new->name, name);
     new->argc = argc;
@@ -25,7 +25,7 @@ PseudoIns initPseudoIns(char name[], bool tiene_arg, ArgsTipo arg_tipo, Efecto e
 	return psi;
 }
 
-Alias initAlias(char name[], int argc, ArgsTipo argstipos[3], Expandir expandir) {
+Alias initAlias(char name[], int argc, ArgsTipo argstipos[], Expandir expandir) {
 	Alias new = malloc(sizeof(struct __alias));
 	strcpy(new->name, name);
 	for (int i = 0; i < argc; i++) {
@@ -152,7 +152,7 @@ void comoStr(bin word, char repr[17]){
 }
 
 
-void intComoStr(int word, char repr[33]){
+void intComoStr(int word, char repr[]){
     bin k;
 	for(int c = 31; c >= 0; c--){
 		k = word >> c;
@@ -167,7 +167,7 @@ void intComoStr(int word, char repr[33]){
 }
 
 
-void argTipoComoStr(ArgsTipo tipo, char repr[50]){
+void argTipoComoStr(ArgsTipo tipo, char repr[]){
 	const char num_str[] = "Numero";
 	const char reg_str[] = "Registro";
 	const char etq_str[] = "Etiqueta";

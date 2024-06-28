@@ -128,13 +128,15 @@ typedef Operacion* (*Expandir)(AliasOp, int*);
 
 void initConstantesGlobales();
 void comoStr(bin bin, char str[17]);
-void intComoStr(int word, char repr[33]);
-void argTipoComoStr(ArgsTipo tipo, char repr[50]);
+void intComoStr(int word, char repr[]);
+void argTipoComoStr(ArgsTipo tipo, char repr[]);
 Instruccion deStringInstruccion(char token[], bool* error);
 TipoToken encontrarTipoPrimerToken(Token tkn);
 PseudoIns deStringPseudoIns(char token[], bool* error);
 Alias deStringAlias(char token[], bool* error);
 
+#ifndef CONST_GLOBALES
+#define CONST_GLOBALES
 
 struct __instruccion {
     char name[10];
@@ -143,6 +145,7 @@ struct __instruccion {
     unsigned short base;
     Traductor traductor;
 };
+
 
 Instruccion AND;
 Instruccion OR;
@@ -195,4 +198,5 @@ struct __alias {
 Alias ADD;
 Alias MOV;
 
+#endif
 #endif 

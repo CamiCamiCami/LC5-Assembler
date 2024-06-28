@@ -98,16 +98,16 @@ Argumento initArgumento(Token token){
     return initArgumentoEtiqueta(token);
 }
 
-Argumento directInitArgumento(int n_reg, int n, char string[], char etiqueta[], ArgsTipo tipo) {
+Argumento directInitArgumento(void* arg, ArgsTipo tipo) {
     switch (tipo) {
     case TIPO_REGISTRO:
-        return initArgumentoRegistro(n_reg);
+        return initArgumentoRegistro(((Registro)arg)->NUMERO);
     case TIPO_NUMERO:
-        return initArgumentoNumero(n);
+        return initArgumentoNumero(*((int*)arg));
     case TIPO_STRING:
-        return initArgumentoString(string);
+        return initArgumentoString(arg);
     case TIPO_ETIQUETA:
-        return initArgumentoEtiqueta(etiqueta);
+        return initArgumentoEtiqueta(arg);
     default:
         fprintf(stderr, "Error de programacion, directInitArgumento");
         exit(0);

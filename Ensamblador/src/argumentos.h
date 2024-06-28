@@ -2,7 +2,7 @@
 
 Argumento initArgumento(Token tkn);
 
-Argumento directInitArgumento(int n_reg, int n, char string[], char etiqueta[], ArgsTipo tipo);
+Argumento directInitArgumento(void* arg, ArgsTipo tipo);
 
 void freeArgumento(Argumento arg);
 

@@ -71,11 +71,11 @@ Operacion* expandirADD(AliasOp aop, int* c_op) {
         int lower = ((res & (short)0b0000000011111111));
         expansion = malloc(sizeof(Operacion) * 2);
         *c_op = 2;
-        Argumento args_lui[] = {directInitArgumento(reg->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                directInitArgumento(0, upper, NULL, NULL, TIPO_NUMERO)};
+        Argumento args_lui[] = {directInitArgumento(reg, TIPO_REGISTRO),
+                                directInitArgumento(&upper, TIPO_NUMERO)};
         expansion[0] = initOperacion(LUI, args_lui, 2);
-        Argumento args_lori[] = {directInitArgumento(reg->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                 directInitArgumento(0, lower, NULL, NULL, TIPO_NUMERO)};
+        Argumento args_lori[] = {directInitArgumento(reg, TIPO_REGISTRO),
+                                 directInitArgumento(&lower, TIPO_NUMERO)};
         expansion[1] = initOperacion(LUI, args_lori, 2);
         return expansion;
     case 1:;
@@ -94,23 +94,23 @@ Operacion* expandirADD(AliasOp aop, int* c_op) {
         expansion = malloc(sizeof(Operacion) * ceil(size));
         int i = 0;
         for (int i = 0; abs(sum2) > maxADDI; sum2 -= sign(sum2)*maxADDI, i++) {
-            Argumento args[] = {directInitArgumento(reg->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                 directInitArgumento(sum1->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                 directInitArgumento(0, maxADDI, NULL, NULL, TIPO_NUMERO)};
+            Argumento args[] = {directInitArgumento(reg, TIPO_REGISTRO),
+                                 directInitArgumento(sum1, TIPO_REGISTRO),
+                                 directInitArgumento((int*)&maxADDI, TIPO_NUMERO)};
             expansion[i] = initOperacion(IADDI, args, 3);
         }
-        Argumento arg_addi[] = {directInitArgumento(reg->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                            directInitArgumento(sum1->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                            directInitArgumento(0, sum2, NULL, NULL, TIPO_NUMERO)};
+        Argumento arg_addi[] = {directInitArgumento(reg, TIPO_REGISTRO),
+                            directInitArgumento(sum1, TIPO_REGISTRO),
+                            directInitArgumento(&sum2, TIPO_NUMERO)};
         expansion[i] = initOperacion(IADDI, arg_addi, 3);
         *c_op = i+1;
         return expansion;
     case 2:   // Dos Registros
         expansion = malloc(sizeof(Operacion));
         *c_op = 1;
-        Argumento arg_add[] = {directInitArgumento(reg->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                            directInitArgumento(((Registro)aop->args[1]->valor)->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                            directInitArgumento(((Registro)aop->args[1]->valor)->NUMERO, 0, NULL, NULL, TIPO_REGISTRO)};
+        Argumento arg_add[] = {directInitArgumento(reg, TIPO_REGISTRO),
+                            directInitArgumento(((Registro)aop->args[1]->valor), TIPO_REGISTRO),
+                            directInitArgumento(((Registro)aop->args[1]->valor), TIPO_REGISTRO)};
         expansion[0] = initOperacion(IADD, arg_add, 3);
         return expansion;
     default:
@@ -132,30 +132,31 @@ Operacion* expandirMOV(AliasOp aop, int *c_op) {
             Registro remitente = arg2->valor;
             expansion = malloc(sizeof(Operacion) * 2);
             *c_op = 2;
-            Argumento arg_xor[] = {directInitArgumento(dest->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                   directInitArgumento(dest->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                   directInitArgumento(dest->NUMERO, 0, NULL, NULL, TIPO_REGISTRO)};
+            Argumento arg_xor[] = {directInitArgumento(dest, TIPO_REGISTRO),
+                                   directInitArgumento(dest, TIPO_REGISTRO),
+                                   directInitArgumento(dest, TIPO_REGISTRO)};
             expansion[0] = initOperacion(XOR, arg_xor, 3);
-            Argumento arg_or[] = {directInitArgumento(dest->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                   directInitArgumento(dest->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                   directInitArgumento(remitente->NUMERO, 0, NULL, NULL, TIPO_REGISTRO)};
+            Argumento arg_or[] = {directInitArgumento(dest, TIPO_REGISTRO),
+                                   directInitArgumento(dest, TIPO_REGISTRO),
+                                   directInitArgumento(remitente, TIPO_REGISTRO)};
             expansion[1] = initOperacion(OR, arg_or, 3);
         } else if(arg2->tipo & TIPO_NUMERO) {
-            bin inmediato = *((int*)arg2->valor);
+            bin inm_lui = *((int*)arg2->valor) >> 8;
+            bin inm_lori = *((int*)arg2->valor) & 0b0000000011111111;
             expansion = malloc(sizeof(Operacion) * 2);
             *c_op = 2;
-            Argumento arg_lui[] = {directInitArgumento(dest->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                   directInitArgumento(0, (inmediato >> 8), NULL, NULL, TIPO_NUMERO)};
+            Argumento arg_lui[] = {directInitArgumento(dest, TIPO_REGISTRO),
+                                   directInitArgumento(&inm_lui, TIPO_NUMERO)};
             expansion[0] = initOperacion(LUI, arg_lui, 2);
-            Argumento arg_lori[] = {directInitArgumento(dest->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                   directInitArgumento(0, (inmediato & 0b0000000011111111), NULL, NULL, TIPO_NUMERO)};
+            Argumento arg_lori[] = {directInitArgumento(dest, TIPO_REGISTRO),
+                                   directInitArgumento(&inm_lori, TIPO_NUMERO)};
             expansion[1] = initOperacion(LORI, arg_lori, 2);
         } else if(arg2->tipo & TIPO_ETIQUETA) {
             char *label = ((char*)arg2->valor);
             expansion = malloc(sizeof(Operacion) * 1);
             *c_op = 1;
-            Argumento arg_ld[] = {directInitArgumento(dest->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                  directInitArgumento(0, 0, NULL, label, TIPO_ETIQUETA)};
+            Argumento arg_ld[] = {directInitArgumento(dest, TIPO_REGISTRO),
+                                  directInitArgumento(label, TIPO_ETIQUETA)};
             expansion[0] = initOperacion(LD, arg_ld, 1);
         } else {
             fprintf(stderr, "expandirMOV: Error de Programacion");
@@ -168,8 +169,8 @@ Operacion* expandirMOV(AliasOp aop, int *c_op) {
             Registro remitente = ((Registro)arg2->valor);
             expansion = malloc(sizeof(Operacion) * 1);
             *c_op = 1;
-            Argumento arg_st[] = {directInitArgumento(remitente->NUMERO, 0, NULL, NULL, TIPO_REGISTRO),
-                                  directInitArgumento(0, 0, NULL, label, TIPO_ETIQUETA)};
+            Argumento arg_st[] = {directInitArgumento(remitente, TIPO_REGISTRO),
+                                  directInitArgumento(label, TIPO_ETIQUETA)};
             expansion[0] = initOperacion(ST, arg_st, 1);
         } else if(arg2->tipo & TIPO_NUMERO) {
             fprintf(stderr, "expandirMOV: Inmediato a memoria no está implementado");
