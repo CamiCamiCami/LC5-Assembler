@@ -4,6 +4,8 @@
 #include "symtable.h"
 #include "full_address.h"
 #include "operacion.h"
+#include "psoperacion.h"
+#include "alias.h"
 #include "seccion.h"
 
 #define DEBUG 1
@@ -89,7 +91,7 @@ ConsPrograma initConstructorPrograma() {
     return prog;
 }
 
-void addOperacionPrograma(ConsPrograma prog, Operacion op, char label[]) {
+void addProgramaOperacion(ConsPrograma prog, Operacion op, char label[]) {
     if (prog->reached_end) {
         debug_print("addOperacionPrograma: No se agrego la operacion, fin del programa alcanzado\n");
         return;
@@ -101,6 +103,36 @@ void addOperacionPrograma(ConsPrograma prog, Operacion op, char label[]) {
     }
     pushCola(prog->text, op);
     debug_print("addOperacionPrograma: Operacion agregada exitosamente\n");
+}
+
+void addProgramaPseudoOperacion(ConsPrograma prog, PseudoOp pso, char label[]) {
+    efectuarPseudoOp(prog, pso, label);
+}
+
+void addProgramaAlias(ConsPrograma prog, AliasOp aliasop, char label[]) {
+    int cant_op;
+    Operacion* traduccion = expandirAliasOp(aliasop, &cant_op);
+    addProgramaOperacion(prog, traduccion[0], label);
+    for (int i = 1; i < cant_op; i++)
+        addProgramaOperacion(prog, traduccion[i], NULL);
+    free(traduccion);
+}
+
+void addProgama(ConsPrograma prog, void* comando, TipoComando tipo, char label[]) {
+    switch (tipo) {
+    case OPERACION:
+        addProgramaOperacion(prog, comando, label);
+        break;
+    case PSEUDOOP:
+        addProgramaPseudoOperacion(prog, comando, label);
+        break;
+    case ALIAS:
+        addProgramaAlias(prog, comando, label);
+        break;
+    default:
+        fprintf(stderr, "Tipo de comando desconocido %i", tipo);
+        break;
+    }
 }
 
 void addLiteralPrograma(ConsPrograma prog, bin literal, char label[]) {

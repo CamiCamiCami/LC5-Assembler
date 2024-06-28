@@ -1,7 +1,6 @@
 #include "utils.h"
-#include "pseudoIns.h"
 #include "argumentos.h"
-#include "helpers_traduccion.h"
+#include "helpers.h"
 #include <ctype.h>
 
 
@@ -17,8 +16,28 @@ Instruccion initInstruccion(char name[10], int argc, int argstipos[3], bin base,
     return new;
 }
 
+PseudoIns initPseudoIns(char name[], bool tiene_arg, ArgsTipo arg_tipo, Efecto efecto) {
+	PseudoIns psi = malloc(sizeof(struct __pseudo_instruccion));
+	strcpy(psi->name, name);
+	psi->arg_tipo = arg_tipo;
+	psi->efecto = efecto;
+	psi->necesita_arg = tiene_arg;
+	return psi;
+}
 
-#define getInstrucciones() {AND, OR, ADD, NOR, ANN, XOR, SUB, SLT, ADDI, LUI, LORI, LD, ST, LDR, STR, BRn, BRz, BRp, BRnz, BRnp, BRzp, JUMP, JR, JAL, JALR, TRAP, RTI, NULL};
+Alias initAlias(char name[], int argc, ArgsTipo argstipos[3], Expandir expandir) {
+	Alias new = malloc(sizeof(struct __alias));
+	strcpy(new->name, name);
+	for (int i = 0; i < argc; i++) {
+        new->arg_tipo[i] = argstipos[i];
+    }
+	new->argc = argc;
+	new->expandir = expandir;
+	return new;	
+}
+
+
+#define getInstrucciones() {AND, OR, IADD, NOR, ANN, XOR, SUB, SLT, IADDI, LUI, LORI, LD, ST, LDR, STR, BRn, BRz, BRp, BRnz, BRnp, BRzp, JUMP, JR, JAL, JALR, TRAP, RTI, NULL};
 
 Instruccion deStringInstruccion(char token[], bool* error){
 	Instruccion instrucciones[] = getInstrucciones();
@@ -37,19 +56,57 @@ Instruccion deStringInstruccion(char token[], bool* error){
     return NULL;
 }
 
-void initInstrucciones() {
+#define getPsInstrucciones() {ORIG, FILL, BLKW, STRINGZ, END, NULL};
+
+PseudoIns deStringPseudoIns(char token[], bool* error){
+	PseudoIns instrucciones[] = getPsInstrucciones();
+	char cpy[strlen(token)];
+
+	strcpy(cpy, token);
+	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
+	
+    for(int i = 0; instrucciones[i]; i++){
+        if(!strcmp(cpy, instrucciones[i]->name)){
+            *error = false;
+            return instrucciones[i];
+        }
+    }
+    *error = true;
+    return NULL;
+}
+
+#define getAliases() {ADD, MOV, NULL};
+
+Alias deStringAlias(char token[], bool* error){
+	Alias aliases[] = getAliases();
+	char cpy[strlen(token)];
+
+	strcpy(cpy, token);
+	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
+	
+    for(int i = 0; aliases[i]; i++){
+        if(!strcmp(cpy, aliases[i]->name)){
+            *error = false;
+            return aliases[i];
+        }
+    }
+    *error = true;
+    return NULL;
+}
+
+void initConstantesGlobales() {
 	int tresRegistros[] = {TIPO_REGISTRO, TIPO_REGISTRO, TIPO_REGISTRO};
 	int unicaEtiqueta[] = {TIPO_ETIQUETA};
 
 	AND = initInstruccion(	"and",	  3, tresRegistros, 									   0b0001000000000000, traducirArimetica);
 	OR = initInstruccion(	"or", 	  3, tresRegistros, 									   0b0001000000000001, traducirArimetica);
-	ADD = initInstruccion(	"i.add",  3, tresRegistros, 									   0b0001000000000010, traducirArimetica);
+	IADD = initInstruccion(	"i.add",  3, tresRegistros, 									   0b0001000000000010, traducirArimetica);
 	NOR = initInstruccion(	"nor", 	  3, tresRegistros, 									   0b0001000000000011, traducirArimetica);
 	ANN = initInstruccion(	"ann", 	  3, tresRegistros,									 	   0b0001000000000100, traducirArimetica);
  	XOR = initInstruccion(	"xor", 	  3, tresRegistros, 									   0b0001000000000101, traducirArimetica);
  	SUB = initInstruccion(	"sub", 	  3, tresRegistros, 									   0b0001000000000110, traducirArimetica);
  	SLT = initInstruccion(	"slt", 	  3, tresRegistros, 									   0b0001000000000111, traducirArimetica);
- 	ADDI = initInstruccion(	"i.addi", 3, (int[]){TIPO_REGISTRO, TIPO_REGISTRO, TIPO_NUMERO},   0b0101000000000000, traducirADDI);
+ 	IADDI = initInstruccion("i.addi", 3, (int[]){TIPO_REGISTRO, TIPO_REGISTRO, TIPO_NUMERO},   0b0101000000000000, traducirADDI);
  	LUI = initInstruccion(	"lui", 	  2, (int[]){TIPO_REGISTRO, TIPO_NUMERO}, 				   0b0100000000000000, traducirLUI);
  	LORI = initInstruccion(	"lori",   2, (int[]){TIPO_REGISTRO, TIPO_NUMERO}, 				   0b0100000100000000, traducirLORI);
  	LD = initInstruccion(	"ld", 	  2, (int[]){TIPO_REGISTRO, TIPO_ETIQUETA}, 			   0b0010000000000000, traducirLD);
@@ -68,6 +125,15 @@ void initInstrucciones() {
  	JALR = initInstruccion(	"jalr",   1, unicaEtiqueta, 									   0b1001000000000000, traducirJALR);
  	TRAP = initInstruccion(	"trap",   1, (int[]){TIPO_NUMERO}, 								   0b1010000000000000, traducirTRAP);
  	RTI = initInstruccion(	"rti", 	  0, NULL, 												   0b1011000000000000, traducirRTI);
+
+	ORIG = initPseudoIns(		".orig", 	true,  TIPO_NUMERO, 				 efectuarORIG);
+	FILL = initPseudoIns(		".fill", 	true,  TIPO_NUMERO | TIPO_ETIQUETA,  efectuarFILL);
+	BLKW = initPseudoIns(		".blkw", 	true,  TIPO_NUMERO, 				 efectuarBLKW);
+	STRINGZ = initPseudoIns(	".stringz", true,  TIPO_STRING, 				 efectuarSTRINGZ);
+	END = initPseudoIns(		".end", 	false, 0, 							 efectuarEND);
+
+	ADD = initAlias("add",	3,	(ArgsTipo[]){TIPO_REGISTRO, TIPO_REGISTRO | TIPO_NUMERO, TIPO_REGISTRO | TIPO_NUMERO}, 		expandirADD);
+	MOV = initAlias("mov",	2,	(ArgsTipo[]){TIPO_REGISTRO | TIPO_ETIQUETA, TIPO_REGISTRO | TIPO_NUMERO | TIPO_ETIQUETA},	expandirMOV);
 }
 
 
@@ -145,7 +211,7 @@ TipoToken encontrarTipoPrimerToken(Token tkn){
 	if (!err_parse_ins){
 		return INSTRUCCION;
 	} else if (!err_parse_psi){
-		return PSEUDOOP;
+		return PSEUDOINS;
 	} else {
 		return ETIQUETA;
 	}

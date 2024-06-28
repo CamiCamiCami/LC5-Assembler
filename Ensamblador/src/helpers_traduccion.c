@@ -1,4 +1,4 @@
-#include "helpers_traduccion.h"
+#include "helpers.h"
 #include "operacion.h"
 #include "symtable.h"
 #include "argumentos.h"
@@ -13,7 +13,7 @@ void checkArgsOperacion(Operacion op){
     Argumento* args = op->args;
     int c_arg = op->argc;
 
-    int* esperado = ins->args_tipos;
+    ArgsTipo* esperado = ins->args_tipos;
     int c_esperado = ins->argc;
 
     debug_print("Chequeando operacion %s\n", ins->name);
@@ -99,6 +99,7 @@ bin formatNum(short* n, unsigned int size){
 }
 
 
+/*
 bin formatSHNum(short* SH, short* n){
     if (*SH > 4){
         // Manejo de Error
@@ -112,6 +113,7 @@ bin formatSHNum(short* SH, short* n){
     debug_print("formatSHNum: %s\n", str);
     return b;
 }
+*/
 
 bin solveRelReference(SymTable table, addr pos, char label[], unsigned int size){
     FullAddr label_full_addr = searchSymTable(table, label);
@@ -132,42 +134,6 @@ bin traducirArimetica(Operacion op, SymTable tabla, addr pos){
     return op->ins->base + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + shiftReg(op->args[2]->valor, 5);
 }
 
-/*
-
-bin traducirADD(Operacion op, SymTable tabla, addr pos){
-    return traducirArimetica(op, tabla, pos);
-}
-
-bin traducirSUB(Operacion op, SymTable tabla, addr pos){
-    return traducirArimetica(op, tabla, pos);
-}
-
-bin traducirAND(Operacion op, SymTable tabla, addr pos){
-    return traducirArimetica(op, tabla, pos);
-}
-
-bin traducirOR(Operacion op, SymTable tabla, addr pos){
-    return traducirArimetica(op, tabla, pos);
-}
-
-bin traducirNOR(Operacion op, SymTable tabla, addr pos){
-    return traducirArimetica(op, tabla, pos);
-}
-
-bin traducirANN(Operacion op, SymTable tabla, addr pos){
-    return traducirArimetica(op, tabla, pos);
-}
-
-bin traducirXOR(Operacion op, SymTable tabla, addr pos){
-    return traducirArimetica(op, tabla, pos);
-}   
-
-bin traducirSLT(Operacion op, SymTable tabla, addr pos){
-    return traducirArimetica(op, tabla, pos);
-}
-
-*/
-
 bin traducirADDI(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
     return op->ins->base + shiftReg(op->args[0]->valor, 11) + shiftReg(op->args[1]->valor, 8) + formatNum(op->args[2]->valor, 6);
@@ -177,24 +143,6 @@ bin traducirBranch(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
     return op->ins->base + solveRelReference(tabla, pos, op->args[0]->valor, 9);
 }
-
-/*
-
-bin traducirBRp(Operacion op, SymTable tabla, addr pos){
-    return traducirBranch()
-}
-
-bin traducirBRz(Operacion op, SymTable tabla, addr pos){
-    checkArgsOperacion(op);
-    return op->ins->base + solveRelReference(tabla, pos, op->args[0]->valor, 10);
-}
-
-bin traducirBRn(Operacion op, SymTable tabla, addr pos){
-    checkArgsOperacion(op);
-    return op->ins->base + solveRelReference(tabla, pos, op->args[0]->valor, 10);
-}
-
-*/
 
 bin traducirJUMP(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
@@ -213,17 +161,8 @@ bin traducirJALR(Operacion op, SymTable tabla, addr pos){
 
 bin traducirTRAP(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);
-    return op->ins->base + shiftReg(op->args[0]->valor, 8);
+    return op->ins->base + formatNum(op->args[0]->valor, 5);
 }
-
-/*
-
-bin traducirRETI(Operacion op, SymTable tabla, addr pos){
-    checkArgsOperacion(op);
-    return op->ins->base;
-}
-
-*/
 
 bin traducirJAL(Operacion op, SymTable tabla, addr pos){
     checkArgsOperacion(op);

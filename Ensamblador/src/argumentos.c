@@ -98,6 +98,22 @@ Argumento initArgumento(Token token){
     return initArgumentoEtiqueta(token);
 }
 
+Argumento directInitArgumento(int n_reg, int n, char string[], char etiqueta[], ArgsTipo tipo) {
+    switch (tipo) {
+    case TIPO_REGISTRO:
+        return initArgumentoRegistro(n_reg);
+    case TIPO_NUMERO:
+        return initArgumentoNumero(n);
+    case TIPO_STRING:
+        return initArgumentoString(string);
+    case TIPO_ETIQUETA:
+        return initArgumentoEtiqueta(etiqueta);
+    default:
+        fprintf(stderr, "Error de programacion, directInitArgumento");
+        exit(0);
+    }
+}
+
 /*Argumento* parsearArgumentos(char raw[], int* argc){
     debug_print("parsearArgumentos: Parseando %s\n", raw);
     const int MAX_TOKENS = 5;
@@ -126,6 +142,9 @@ Argumento initArgumento(Token token){
 }*/
 
 void freeArgumento(Argumento arg){
+    if (arg == NULL) {
+        return;
+    }
     free(arg->valor);
     free(arg);
 }

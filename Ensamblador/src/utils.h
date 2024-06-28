@@ -5,22 +5,21 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define MAX_ADDR (1 << 16)
-
-enum __pseudoins{
-    ORIG = 0,
-    FILL,
-    BLKW,
-    STRINGZ,
-    END
-};
 
 enum __tipo_args {
     TIPO_NUMERO = 0b00000011,
     TIPO_REGISTRO = 0b00001100,
     TIPO_ETIQUETA = 0b00110000,
     TIPO_STRING = 0b11000000
+};
+
+enum __tipo_comando {
+    OPERACION = 0,
+    PSEUDOOP,
+    ALIAS
 };
 
 enum __seccion {
@@ -30,7 +29,7 @@ enum __seccion {
 
 enum __tipo_token {
     INSTRUCCION = 0,
-    PSEUDOOP,
+    PSEUDOINS,
     ETIQUETA,
     ARGUMENTOS
 };
@@ -88,38 +87,58 @@ struct __operacion{
     int argc;
 };
 
+struct __pseudo_operacion {
+    struct __pseudo_instruccion* psi;
+    struct __argumento* arg;
+};
+
+struct __alias_operacion {
+    struct __alias* alias;
+    struct __argumento** args;
+    int argc;
+};
+
+
 
 typedef char* Token;
 typedef enum __seccion Seccion;
-typedef enum __pseudoins PseudoIns;
 typedef enum __tipo_args ArgsTipo;
 typedef enum __tipo_token TipoToken;
+typedef enum __tipo_comando TipoComando;
 typedef FILE* Escaner;
 typedef struct __cola_nodo* ColaNodo;
 typedef struct __cola* Cola;
 typedef struct __operacion *Operacion;
+typedef struct __pseudo_operacion *PseudoOp;
+typedef struct __alias_operacion *AliasOp;
 typedef struct __argumento* Argumento;
 typedef struct __registro *Registro;
 typedef struct __symbol_table* SymTable;
 typedef struct __full_address* FullAddr;
 typedef struct __instruccion* Instruccion;
-typedef struct __operacion* Operacion;
+typedef struct __pseudo_instruccion* PseudoIns;
+typedef struct __alias* Alias;
 typedef struct __constructor_salida* ConsSalida;
 typedef struct __constructor_programa* ConsPrograma;
 typedef unsigned short bin;
 typedef unsigned short addr;
 typedef bin (*Traductor)(Operacion, SymTable, addr);
+typedef void (*Efecto)(ConsPrograma, PseudoOp, char*);
+typedef Operacion* (*Expandir)(AliasOp, int*);
 
-void initInstrucciones();
+void initConstantesGlobales();
 void comoStr(bin bin, char str[17]);
 void intComoStr(int word, char repr[33]);
 void argTipoComoStr(ArgsTipo tipo, char repr[50]);
 Instruccion deStringInstruccion(char token[], bool* error);
 TipoToken encontrarTipoPrimerToken(Token tkn);
+PseudoIns deStringPseudoIns(char token[], bool* error);
+Alias deStringAlias(char token[], bool* error);
+
 
 struct __instruccion {
     char name[10];
-    int args_tipos[3];
+    enum __tipo_args args_tipos[3];
     int argc;
     unsigned short base;
     Traductor traductor;
@@ -127,13 +146,13 @@ struct __instruccion {
 
 Instruccion AND;
 Instruccion OR;
-Instruccion ADD;
+Instruccion IADD;
 Instruccion NOR;
 Instruccion ANN;
 Instruccion XOR;
 Instruccion SUB;
 Instruccion SLT;
-Instruccion ADDI;
+Instruccion IADDI;
 Instruccion LUI;
 Instruccion LORI;
 Instruccion LD;
@@ -152,5 +171,28 @@ Instruccion JALR;
 Instruccion JAL;
 Instruccion TRAP;
 Instruccion RTI;
+
+struct __pseudo_instruccion {
+    char name[10];
+    bool necesita_arg;
+    enum __tipo_args arg_tipo;
+    Efecto efecto;
+};
+
+PseudoIns ORIG;
+PseudoIns FILL;
+PseudoIns BLKW;
+PseudoIns STRINGZ;
+PseudoIns END;
+
+struct __alias {
+    char name[10];
+    enum __tipo_args arg_tipo[3];
+    int argc;
+    Expandir expandir;
+};
+
+Alias ADD;
+Alias MOV;
 
 #endif 
