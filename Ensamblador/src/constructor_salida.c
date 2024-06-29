@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#define DEBUG 1
+#define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
 ConsSalida initConstructorSalida(char path[], addr orig){
     FILE* f = fopen(path, "wb");
@@ -38,6 +40,11 @@ void agregarConsSalida(ConsSalida cons, bin b) {
 }
 
 void construirSalida(ConsSalida cons){
+    for (int i = 0; i < cons->largo; i++) {
+        char bin[17];
+        comoStr(cons->contenido[i], bin);
+        debug_print("%s\n", bin);
+    }
     int escrito = fwrite(cons->contenido, sizeof(bin), cons->largo, cons->file);
     if (escrito < cons->largo){
         // Manejo de Error

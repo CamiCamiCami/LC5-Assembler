@@ -1,7 +1,7 @@
 #include "helpers.h"
 #include "argumentos.h"
 #include "operacion.h"
-
+#include <math.h>
 
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
@@ -47,6 +47,10 @@ void checkArgsAlias(AliasOp aop){
             exit(1);
         }
     }
+}
+
+double ceil(double n) {
+    return ((double)((int) n)) == n ? (int) n : ((int) n) + 1;
 }
 
 int sign(int n) {
@@ -110,7 +114,7 @@ Operacion* expandirADD(AliasOp aop, int* c_op) {
         *c_op = 1;
         Argumento arg_add[] = {directInitArgumento(reg, TIPO_REGISTRO),
                             directInitArgumento(((Registro)aop->args[1]->valor), TIPO_REGISTRO),
-                            directInitArgumento(((Registro)aop->args[1]->valor), TIPO_REGISTRO)};
+                            directInitArgumento(((Registro)aop->args[2]->valor), TIPO_REGISTRO)};
         expansion[0] = initOperacion(IADD, arg_add, 3);
         return expansion;
     default:
@@ -157,7 +161,7 @@ Operacion* expandirMOV(AliasOp aop, int *c_op) {
             *c_op = 1;
             Argumento arg_ld[] = {directInitArgumento(dest, TIPO_REGISTRO),
                                   directInitArgumento(label, TIPO_ETIQUETA)};
-            expansion[0] = initOperacion(LD, arg_ld, 1);
+            expansion[0] = initOperacion(LD, arg_ld, 2);
         } else {
             fprintf(stderr, "expandirMOV: Error de Programacion");
             exit(1);
@@ -171,7 +175,7 @@ Operacion* expandirMOV(AliasOp aop, int *c_op) {
             *c_op = 1;
             Argumento arg_st[] = {directInitArgumento(remitente, TIPO_REGISTRO),
                                   directInitArgumento(label, TIPO_ETIQUETA)};
-            expansion[0] = initOperacion(ST, arg_st, 1);
+            expansion[0] = initOperacion(ST, arg_st, 2);
         } else if(arg2->tipo & TIPO_NUMERO) {
             fprintf(stderr, "expandirMOV: Inmediato a memoria no está implementado");
             exit(1);

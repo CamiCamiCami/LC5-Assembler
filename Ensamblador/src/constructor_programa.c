@@ -194,8 +194,6 @@ void buildPrograma(ConsPrograma prog, char path[]) {
     setStartSeccion(DATA, (getStartSeccion(TEXT) + lengthCola(prog->text)));
     debug_print("buildPrograma: Inicio de seccion .data seteada a %u\n", (getStartSeccion(TEXT) + lengthCola(prog->text)));
 
-    agregarConsSalida(builder, (bin)prog->orig);    // Temporal
-
     addr pos = prog->orig;
     while (lengthCola(prog->text) > 0) {
         Operacion op = popCola(prog->text);

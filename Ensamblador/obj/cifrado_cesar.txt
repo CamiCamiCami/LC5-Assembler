@@ -7,25 +7,18 @@ codigo		.blkw		11
 codigo_dir	.fill		codigo
 
 
-			lui			r0,0
-			lori		r0,0
-
-			ld			r3,llave
-
-			ld			r4,msg_dir
-
-			ld			r5,codigo_dir
-
-			lui			r7,0
-			lori		r7,0
-
+			mov			r0,0
+			mov			r3,llave
+			mov			r4,msg_dir
+			mov			r5,codigo_dir
+			mov			r7,0
 
 loop		ldr			r0,r4,0
 			brz			exit
-			i.add		r0,r0,r3
+			add			r0,r0,r3
 			str			r0,r5,0
-			i.addi		r4,r4,1
-			i.addi		r5,r5,1
+			add			r4,r4,1
+			add			r5,r5,1
 			jump		loop
 
 exit		str			r0,r5,0

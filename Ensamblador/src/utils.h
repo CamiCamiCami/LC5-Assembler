@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include <string.h> 
 
 #define MAX_ADDR (1 << 16)
 
@@ -135,9 +134,6 @@ TipoToken encontrarTipoPrimerToken(Token tkn);
 PseudoIns deStringPseudoIns(char token[], bool* error);
 Alias deStringAlias(char token[], bool* error);
 
-#ifndef CONST_GLOBALES
-#define CONST_GLOBALES
-
 struct __instruccion {
     char name[10];
     enum __tipo_args args_tipos[3];
@@ -199,4 +195,3 @@ Alias ADD;
 Alias MOV;
 
 #endif
-#endif 
