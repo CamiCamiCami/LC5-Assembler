@@ -1,3 +1,6 @@
+#ifndef LCCCC_TOKENS
+#define LCCCC_TOKENS
+
 #include "utils.h"
 
 Token* parsearTokens(char linea[], int* c_tkn);
@@ -9,3 +12,5 @@ void freeToken(Token token);
 void comoStringToken(Token token, char copia[]);
 
 int lengthToken(Token token);
+
+#endif

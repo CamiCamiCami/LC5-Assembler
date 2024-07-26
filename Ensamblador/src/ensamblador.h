@@ -1,3 +1,6 @@
+#ifndef LCCCC_ENSAMBLADOR
+#define LCCCC_ENSAMBLADOR
+
 #include "utils.h"
 
 #include "escaner.h"
@@ -9,4 +12,4 @@
 #include "symtable.h"
 #include "constructor_programa.h"
 
-
+#endif

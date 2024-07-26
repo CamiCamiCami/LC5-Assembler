@@ -1,3 +1,6 @@
+#ifndef LCCCC_FULLADDRESS
+#define LCCCC_FULLADDRESS
+
 #include "utils.h"
 
 FullAddr initFullAddr(Seccion s, unsigned int offset);
@@ -14,3 +17,5 @@ void freeFullAddr(FullAddr addr);
 
 // Solo puede resolver la direccion real cuando se sepa donde empieza cada seccion
 addr solveAddr(FullAddr addr);
+
+#endif

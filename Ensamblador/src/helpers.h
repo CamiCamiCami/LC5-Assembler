@@ -1,3 +1,6 @@
+#ifndef LCCCC_HELPERS
+#define LCCCC_HELPERS
+
 #include "utils.h"
 
 
@@ -25,3 +28,5 @@ void efectuarEND(ConsPrograma prog, PseudoOp pso, char label[]);
 
 Operacion* expandirADD(AliasOp aop, int *op_c);
 Operacion* expandirMOV(AliasOp aop, int *op_c);
+
+#endif

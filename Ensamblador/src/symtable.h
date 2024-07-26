@@ -1,3 +1,6 @@
+#ifndef LCCCC_SYMTABLE
+#define LCCCC_SYMTABLE
+
 #include "utils.h"
 
 
@@ -11,5 +14,4 @@ FullAddr searchSymTable(SymTable tabla, char* etiqueta);
 
 void freeSymTable(SymTable tabla);
 
-
-
+#endif

@@ -1,3 +1,6 @@
+#ifndef LCCCC_CONSTRUCTOR_PROGRAMA
+#define LCCCC_CONSTRUCTOR_PROGRAMA
+
 #include "utils.h"
 
 
@@ -14,3 +17,5 @@ void setOrig(ConsPrograma prog, addr orig);
 void programaLlegoAlFin(ConsPrograma prog);
 
 void buildPrograma(ConsPrograma prog, char path[]);
+
+#endif
