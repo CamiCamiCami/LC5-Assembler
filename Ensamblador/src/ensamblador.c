@@ -77,7 +77,7 @@ void agregarPseudoOp(ConsPrograma prog, char label[], Token tkns[], int c_tokens
 	}
 
 	PseudoOp pso = initPseudoOp(psi, arg);
-	addProgama(prog, pso, PSEUDOINS, label);
+	addProgama(prog, pso, PSEUDOOP, label);
 }
 
 bool esTokenInstruccion(Token tkn){

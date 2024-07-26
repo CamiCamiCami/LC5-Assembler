@@ -127,7 +127,7 @@ Operacion* expandirMOV(AliasOp aop, int *c_op) {
     checkArgsAlias(aop);
     Argumento arg1 = aop->args[0];
     Argumento arg2 = aop->args[1];
-    Operacion* expansion;
+    Operacion* expansion = NULL;
 
     if (arg1->tipo & TIPO_REGISTRO) {
         Registro dest = arg1->valor;
