@@ -142,34 +142,33 @@ struct __instruccion {
     Traductor traductor;
 };
 
-
-Instruccion AND;
-Instruccion OR;
-Instruccion IADD;
-Instruccion NOR;
-Instruccion ANN;
-Instruccion XOR;
-Instruccion SUB;
-Instruccion SLT;
-Instruccion IADDI;
-Instruccion LUI;
-Instruccion LORI;
-Instruccion LD;
-Instruccion ST;
-Instruccion LDR;
-Instruccion STR;
-Instruccion BRn;
-Instruccion BRz;
-Instruccion BRp;
-Instruccion BRnz;
-Instruccion BRnp;
-Instruccion BRzp;
-Instruccion JUMP;
-Instruccion JR;
-Instruccion JALR;
-Instruccion JAL;
-Instruccion TRAP;
-Instruccion RTI;
+extern Instruccion AND;
+extern Instruccion OR;
+extern Instruccion IADD;
+extern Instruccion NOR;
+extern Instruccion ANN;
+extern Instruccion XOR;
+extern Instruccion SUB;
+extern Instruccion SLT;
+extern Instruccion IADDI;
+extern Instruccion LUI;
+extern Instruccion LORI;
+extern Instruccion LD;
+extern Instruccion ST;
+extern Instruccion LDR;
+extern Instruccion STR;
+extern Instruccion BRn;
+extern Instruccion BRz;
+extern Instruccion BRp;
+extern Instruccion BRnz;
+extern Instruccion BRnp;
+extern Instruccion BRzp;
+extern Instruccion JUMP;
+extern Instruccion JR;
+extern Instruccion JALR;
+extern Instruccion JAL;
+extern Instruccion TRAP;
+extern Instruccion RTI;
 
 struct __pseudo_instruccion {
     char name[10];
@@ -178,11 +177,11 @@ struct __pseudo_instruccion {
     Efecto efecto;
 };
 
-PseudoIns ORIG;
-PseudoIns FILL;
-PseudoIns BLKW;
-PseudoIns STRINGZ;
-PseudoIns END;
+extern PseudoIns ORIG;
+extern PseudoIns FILL;
+extern PseudoIns BLKW;
+extern PseudoIns STRINGZ;
+extern PseudoIns END;
 
 struct __alias {
     char name[10];
@@ -191,7 +190,7 @@ struct __alias {
     Expandir expandir;
 };
 
-Alias ADD;
-Alias MOV;
+extern Alias ADD;
+extern Alias MOV;
 
 #endif
