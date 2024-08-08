@@ -1,12 +1,5 @@
 #include "constructor_programa.h"
-#include "constructor_salida.h"
-#include "cola.h"
-#include "symtable.h"
-#include "full_address.h"
-#include "operacion.h"
-#include "psoperacion.h"
-#include "alias.h"
-#include "seccion.h"
+
 
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)

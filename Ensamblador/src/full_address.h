@@ -2,6 +2,7 @@
 #define LCCCC_FULLADDRESS
 
 #include "utils.h"
+#include "seccion.h"
 
 FullAddr initFullAddr(Seccion s, unsigned int offset);
 

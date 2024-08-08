@@ -1,5 +1,5 @@
 #include "symtable.h"
-#include "full_address.h"
+
 
 /* Definicion de tipos internos */
 

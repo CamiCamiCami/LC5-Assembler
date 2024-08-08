@@ -1,5 +1,4 @@
 #include "alias.h"
-#include "argumentos.h"
 
 AliasOp initAliasOperacion(Alias alias, Argumento args[], int argc) {
     AliasOp aliasop = malloc(sizeof(struct __alias_operacion));

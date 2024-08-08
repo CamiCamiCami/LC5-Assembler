@@ -2,6 +2,8 @@
 #define LCCCC_ESCANER
 
 #include "utils.h"
+#include <errno.h>
+#include "cola.h"
 
 Escaner initEscaner(char path[]);
 

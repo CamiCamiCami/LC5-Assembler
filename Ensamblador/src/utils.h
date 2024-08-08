@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <string.h> 
+#include <string.h>
+
 
 #define MAX_ADDR (1 << 16)
 
@@ -104,7 +105,7 @@ typedef enum __seccion Seccion;
 typedef enum __tipo_args ArgsTipo;
 typedef enum __tipo_token TipoToken;
 typedef enum __tipo_comando TipoComando;
-typedef FILE* Escaner;
+typedef FILE* TokenScanner;
 typedef struct __cola_nodo* ColaNodo;
 typedef struct __cola* Cola;
 typedef struct __operacion *Operacion;

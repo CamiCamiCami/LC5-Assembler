@@ -1,7 +1,5 @@
 #include "helpers.h"
-#include "argumentos.h"
-#include "operacion.h"
-#include <math.h>
+
 
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)

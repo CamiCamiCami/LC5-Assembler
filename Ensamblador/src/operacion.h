@@ -2,6 +2,7 @@
 #define LCCCC_OPERACION
 
 #include "utils.h"
+#include "argumentos.h"
 
 Operacion initOperacion(Instruccion ins, Argumento args[], int argc);
 

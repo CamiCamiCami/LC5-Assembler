@@ -2,7 +2,12 @@
 #define LCCCC_HELPERS
 
 #include "utils.h"
-
+#include "argumentos.h"
+#include "operacion.h"
+#include "constructor_programa.h"
+#include "symtable.h"
+#include "full_address.h"
+#include <math.h>
 
 bin traducirArimetica(Operacion op, SymTable tabla, addr pos);
 bin traducirADDI(Operacion op, SymTable tabla, addr pos);

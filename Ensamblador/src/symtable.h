@@ -2,7 +2,7 @@
 #define LCCCC_SYMTABLE
 
 #include "utils.h"
-
+#include "full_address.h"
 
 SymTable initSymTable(int largo);
 

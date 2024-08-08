@@ -2,6 +2,7 @@
 #define LCCCC_TOKENS
 
 #include "utils.h"
+#include <ctype.h>
 
 Token* parsearTokens(char linea[], int* c_tkn);
 

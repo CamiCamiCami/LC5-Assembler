@@ -3,6 +3,8 @@
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
+char* parsing_label = NULL;
+
 void interpreta_args(int argc, char **argv, char* from, char* to){
     if(argc < 2){
         printf("Falta el archivo a ensamblar\n");
@@ -111,6 +113,8 @@ int main(int argc, char **argv){
 
 	ConsPrograma builder = initConstructorPrograma();
     while(tieneProximoEscaner(lector)){
+
+		for 
 		char* linea = nextEscaner(lector);
 		debug_print("main: Parseando linea -%s-\n", linea);
 
@@ -129,25 +133,23 @@ int main(int argc, char **argv){
 		}
 		
 
+		
+
 		if (esTokenInstruccion(tkns[0])){
-			agregarOperacion(builder, NULL, tkns, c_tkns);
+			agregarOperacion(builder, parsing_label, tkns, c_tkns);
+			parsing_label = NULL;
 		} else if (esTokenPseudoInstruccion(tkns[0])) {
-			agregarPseudoOp(builder, NULL, tkns, c_tkns);
+			agregarPseudoOp(builder, parsing_label, tkns, c_tkns);
+			parsing_label = NULL;
 		} else if (esTokenAlias(tkns[0])) {
-			agregarAlias(builder, NULL, tkns, c_tkns);
+			agregarAlias(builder, parsing_label, tkns, c_tkns);
+			parsing_label = NULL;
 		} else {
-			Token label = tkns[0];
-			Token* comando = tkns+1;
-			if (esTokenInstruccion(comando[0])) {
-				agregarOperacion(builder, label, comando, c_tkns-1);
-			} else if (esTokenPseudoInstruccion(comando[0])) {
-				agregarPseudoOp(builder, label, comando, c_tkns-1);
-			} else if (esTokenAlias(comando[0])) {
-				agregarAlias(builder, label, comando, c_tkns-1);
-			} else {
-				fprintf(stderr, "Sintaxis invalida\n");
+			if (parsing_label != NULL) {
+				// Manejo de Error
 				exit(1);
 			}
+			parsing_label = realloc(parsing_label, sizeof(char) * (strlen(tkns[0]) + 1));
 		}
 	
         

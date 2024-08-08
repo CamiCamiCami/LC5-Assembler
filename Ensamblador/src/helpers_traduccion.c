@@ -1,9 +1,5 @@
 #include "helpers.h"
-#include "operacion.h"
-#include "symtable.h"
-#include "argumentos.h"
-#include "full_address.h"
-#include "constructor_programa.h"
+
 
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)

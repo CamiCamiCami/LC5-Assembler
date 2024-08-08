@@ -2,6 +2,7 @@
 #define LCCCC_ALIAS
 
 #include "utils.h"
+#include "argumentos.h"
 
 AliasOp initAliasOperacion(Alias alias, Argumento args[], int argc);
 

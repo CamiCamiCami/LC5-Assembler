@@ -2,7 +2,14 @@
 #define LCCCC_CONSTRUCTOR_PROGRAMA
 
 #include "utils.h"
-
+#include "constructor_salida.h"
+#include "cola.h"
+#include "symtable.h"
+#include "full_address.h"
+#include "operacion.h"
+#include "psoperacion.h"
+#include "alias.h"
+#include "seccion.h"
 
 ConsPrograma initConstructorPrograma();
 

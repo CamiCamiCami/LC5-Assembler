@@ -1,7 +1,5 @@
 #include "constructor_salida.h"
-#include <errno.h>
-#include <fcntl.h>
-#include <unistd.h>
+
 
 #define DEBUG 1
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)

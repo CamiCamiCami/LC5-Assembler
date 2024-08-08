@@ -1,5 +1,5 @@
 #include "psoperacion.h"
-#include "argumentos.h"
+
 
 PseudoOp initPseudoOp(PseudoIns psi, Argumento arg) {
     PseudoOp pso = malloc(sizeof(struct __pseudo_operacion));

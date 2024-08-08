@@ -2,7 +2,9 @@
 #define LCCCC_CONSTRUCTOR_SALIDA
 
 #include "utils.h"
-
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 ConsSalida initConstructorSalida(char path[], addr orig);
 
