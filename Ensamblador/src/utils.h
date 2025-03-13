@@ -16,22 +16,9 @@ enum __tipo_args {
     TIPO_STRING = 0b11000000
 };
 
-enum __tipo_comando {
-    OPERACION = 0,
-    PSEUDOOP,
-    ALIAS
-};
-
 enum __seccion {
     TEXT,
     DATA
-};
-
-enum __tipo_token {
-    INSTRUCCION = 0,
-    PSEUDOINS,
-    ETIQUETA,
-    ARGUMENTOS
 };
 
 struct __registro{
@@ -82,29 +69,52 @@ struct __constructor_programa {
 };
 
 struct __operacion{
-    struct __instruccion* ins;
+    struct __instruction* ins;
     struct __argumento** args;
-    int argc;
 };
 
 struct __pseudo_operacion {
-    struct __pseudo_instruccion* psi;
+    struct __pseudo_instruction* psi;
     struct __argumento* arg;
 };
 
 struct __alias_operacion {
     struct __alias* alias;
     struct __argumento** args;
-    int argc;
 };
 
+union __instance_type {
+    struct __instruction* ins;
+    struct __pseudo_instruction* psi;
+    struct __alias* alias;
+};
 
+enum __statement_type {
+    OPERATION = 0,
+    PSEUDOOP,
+    ALIAS
+};
 
-typedef char* Token;
+struct __statement {
+    void* ins;
+    Argumento* args;
+    enum __statement_type statement_type;
+};
+
+struct __statement_builder {
+    StatementType type;
+    void* insruction;
+    Argumento* args;
+    int arg_idx;
+    char* label;
+};
+
+typedef struct __statement_builder* StatementBuilder;
+typedef struct __statement* Statement;
+typedef void* InstanceType;
 typedef enum __seccion Seccion;
 typedef enum __tipo_args ArgsTipo;
-typedef enum __tipo_token TipoToken;
-typedef enum __tipo_comando TipoComando;
+typedef enum __statement_type StatementType;
 typedef FILE* TokenScanner;
 typedef struct __cola_nodo* ColaNodo;
 typedef struct __cola* Cola;
@@ -115,8 +125,8 @@ typedef struct __argumento* Argumento;
 typedef struct __registro *Registro;
 typedef struct __symbol_table* SymTable;
 typedef struct __full_address* FullAddr;
-typedef struct __instruccion* Instruccion;
-typedef struct __pseudo_instruccion* PseudoIns;
+typedef struct __instruction* Instruction;
+typedef struct __pseudo_instruction* PseudoIns;
 typedef struct __alias* Alias;
 typedef struct __constructor_salida* ConsSalida;
 typedef struct __constructor_programa* ConsPrograma;
@@ -130,12 +140,11 @@ void initConstantesGlobales();
 void comoStr(bin bin, char str[17]);
 void intComoStr(int word, char repr[]);
 void argTipoComoStr(ArgsTipo tipo, char repr[]);
-Instruccion deStringInstruccion(char token[], bool* error);
-TipoToken encontrarTipoPrimerToken(Token tkn);
+Instruction deStringInstruccion(char token[], bool* error);
 PseudoIns deStringPseudoIns(char token[], bool* error);
 Alias deStringAlias(char token[], bool* error);
 
-struct __instruccion {
+struct __instruction {
     char name[10];
     enum __tipo_args args_tipos[3];
     int argc;
@@ -144,37 +153,37 @@ struct __instruccion {
 };
 
 
-Instruccion AND;
-Instruccion OR;
-Instruccion IADD;
-Instruccion NOR;
-Instruccion ANN;
-Instruccion XOR;
-Instruccion SUB;
-Instruccion SLT;
-Instruccion IADDI;
-Instruccion LUI;
-Instruccion LORI;
-Instruccion LD;
-Instruccion ST;
-Instruccion LDR;
-Instruccion STR;
-Instruccion BRn;
-Instruccion BRz;
-Instruccion BRp;
-Instruccion BRnz;
-Instruccion BRnp;
-Instruccion BRzp;
-Instruccion JUMP;
-Instruccion JR;
-Instruccion JALR;
-Instruccion JAL;
-Instruccion TRAP;
-Instruccion RTI;
+Instruction AND;
+Instruction OR;
+Instruction IADD;
+Instruction NOR;
+Instruction ANN;
+Instruction XOR;
+Instruction SUB;
+Instruction SLT;
+Instruction IADDI;
+Instruction LUI;
+Instruction LORI;
+Instruction LD;
+Instruction ST;
+Instruction LDR;
+Instruction STR;
+Instruction BRn;
+Instruction BRz;
+Instruction BRp;
+Instruction BRnz;
+Instruction BRnp;
+Instruction BRzp;
+Instruction JUMP;
+Instruction JR;
+Instruction JALR;
+Instruction JAL;
+Instruction TRAP;
+Instruction RTI;
 
-struct __pseudo_instruccion {
+struct __pseudo_instruction {
     char name[10];
-    bool necesita_arg;
+    int argc;
     enum __tipo_args arg_tipo;
     Efecto efecto;
 };

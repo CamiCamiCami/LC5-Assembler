@@ -111,9 +111,9 @@ void addProgramaAlias(ConsPrograma prog, AliasOp aliasop, char label[]) {
     free(traduccion);
 }
 
-void addProgama(ConsPrograma prog, void* comando, TipoComando tipo, char label[]) {
+void addProgama(ConsPrograma prog, void* comando, StatementType tipo, char label[]) {
     switch (tipo) {
-    case OPERACION:
+    case OPERATION:
         addProgramaOperacion(prog, comando, label);
         break;
     case PSEUDOOP:

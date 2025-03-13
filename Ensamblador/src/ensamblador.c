@@ -21,7 +21,7 @@ void interpreta_args(int argc, char **argv, char* from, char* to){
 
 void agregarOperacion(ConsPrograma prog, char label[], Token tkns[], int c_tokens) {
 	bool err;
-	Instruccion ins = deStringInstruccion(tkns[0], &err);
+	Instruction ins = deStringInstruccion(tkns[0], &err);
 	if (err) {
 		fprintf(stderr, "Instruccion desconocida, %s", tkns[0]);
 		exit(1);
@@ -37,7 +37,7 @@ void agregarOperacion(ConsPrograma prog, char label[], Token tkns[], int c_token
 		op = initOperacion(ins, NULL, 0);
 	}
 
-	addProgama(prog, op, OPERACION, label);
+	addProgama(prog, op, OPERATION, label);
 }
 
 void agregarAlias(ConsPrograma prog, char label[], Token tkns[], int c_tokens) {

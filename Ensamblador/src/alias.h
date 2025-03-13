@@ -4,7 +4,7 @@
 #include "utils.h"
 #include "argumentos.h"
 
-AliasOp initAliasOperacion(Alias alias, Argumento args[], int argc);
+AliasOp initAliasOperacion(Alias alias, Argumento args[]);
 
 Operacion* expandirAliasOp(AliasOp aliasop, int* op_c);
 

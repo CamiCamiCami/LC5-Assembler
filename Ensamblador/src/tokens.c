@@ -26,38 +26,7 @@ int lengthToken(Token token){
     return strlen(token);
 }
 
-char decode_escape(char escaped){
-    switch (escaped) {
-    case 'a':
-        return (char)0x07;
-    case 'b':
-        return (char)0x08;
-    case 'e':
-        return (char)0x1B;
-    case 'f':
-        return (char)0x0C;
-    case 'n':
-        return (char)0x0A;
-    case 'r':
-        return (char)0x0D;
-    case 't':
-        return (char)0x09;
-    case 'v':
-        return (char)0x0B;
-    case '\\':
-        return (char)0x5C;
-    case '\'':
-        return (char)0x27;
-    case '\"':
-        return (char)0x22;
-    case '?':
-        return (char)0x3F;
-    default:
-        // Manejo de Error
-        fprintf(stderr, "Secuencia escapada ilegal \\%c.\n", escaped);
-        exit(1);
-    }
-}
+
 
 // Mayor cantidad de tokens que espera encontrar en una linea
 #define MAX_TOKENS 5

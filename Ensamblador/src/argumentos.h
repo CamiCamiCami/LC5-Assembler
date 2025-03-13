@@ -3,7 +3,7 @@
 
 #include "utils.h"
 
-Argumento initArgumento(Token tkn);
+Argumento initArgumento(char* tkn);
 
 Argumento directInitArgumento(void* arg, ArgsTipo tipo);
 

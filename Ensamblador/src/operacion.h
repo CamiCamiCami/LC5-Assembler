@@ -4,7 +4,7 @@
 #include "utils.h"
 #include "argumentos.h"
 
-Operacion initOperacion(Instruccion ins, Argumento args[], int argc);
+Operacion initOperacion(Instruction ins, Argumento args[]);
 
 bin traducirOperacion(Operacion op, SymTable tabla, addr pos);
 

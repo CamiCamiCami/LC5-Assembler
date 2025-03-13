@@ -1,14 +1,39 @@
 #include "token_scanner.h"
 
-TokenScanner initScanner(char filename[]) {
-    TokenScanner new_scanner = fopen(filename, "r");
 
-    if (new_scanner == NULL) {
-        // error
+/*   Auxiliary Functions   */
+
+char decode_escape(char escaped){
+    switch (escaped) {
+    case 'a':
+        return (char)0x07;
+    case 'b':
+        return (char)0x08;
+    case 'e':
+        return (char)0x1B;
+    case 'f':
+        return (char)0x0C;
+    case 'n':
+        return (char)0x0A;
+    case 'r':
+        return (char)0x0D;
+    case 't':
+        return (char)0x09;
+    case 'v':
+        return (char)0x0B;
+    case '\\':
+        return (char)0x5C;
+    case '\'':
+        return (char)0x27;
+    case '\"':
+        return (char)0x22;
+    case '?':
+        return (char)0x3F;
+    default:
+        // Manejo de Error
+        fprintf(stderr, "Secuencia escapada ilegal \\%c.\n", escaped);
         exit(1);
     }
-
-    return new_scanner;
 }
 
 char* createCommaString() {
@@ -17,6 +42,55 @@ char* createCommaString() {
     coma_str[1] = '\0';
     return coma_str;
 }
+
+char* readStringToken(TokenScanner scanner) {
+    char* buffer = NULL;
+    int bufferidx = 0;
+    insert2buffer(buffer, &bufferidx, '\"');
+
+    char last;
+    for (last = readChar(scanner); !isQuotationMark(last); last = readChar(scanner)) {
+        if (last == '\\') {
+            insert2buffer(buffer, &bufferidx, decode_escape(readChar(scanner)));
+        } else if (isEOF(last)) {
+            // error
+            exit(1);
+        } else {
+            insert2buffer(buffer, &bufferidx, last);
+        }
+    }
+
+    insert2buffer(buffer, &bufferidx, '\"');
+    insert2buffer(buffer, &bufferidx, '\0');
+
+    skipSpaceCharacters(scanner);
+
+    return buffer;
+}
+
+#define BUFFER_SIZE_STEP 15
+char* insert2buffer (char* buffer, int* idx, char insert) {
+    bool canInsert = ((*idx) % BUFFER_SIZE_STEP) > 0;
+    if (!canInsert) {
+        buffer = realloc(buffer, (*idx) + BUFFER_SIZE_STEP);
+    }
+    buffer[*idx] = insert;
+    (*idx)++;
+    return buffer;
+}
+
+void skipSpaceCharacters(TokenScanner scanner) {
+    char last;
+    for (last = readChar(scanner); isSpaceSeparator(last) && !isEOF(last); last = readChar(scanner));
+
+    if (!feof(scanner)) {
+        fseek(scanner, -1, SEEK_CUR);
+    }
+}
+
+
+
+/*   Pretty Functions   */
 
 char readChar(TokenScanner scanner) {
     return fgetc(scanner);
@@ -50,24 +124,23 @@ bool isSpaceSeparator(char c) {
     return invisible || space || tab || newline;
 }
 
-#define BUFFER_SIZE_STEP 15
-char* insert2buffer (char* buffer, int* idx, char insert) {
-    bool canInsert = ((*idx) % BUFFER_SIZE_STEP) > 0;
-    if (!canInsert) {
-        buffer = realloc(buffer, (*idx) + BUFFER_SIZE_STEP);
-    }
-    buffer[*idx] = insert;
-    (*idx)++;
-    return buffer;
+bool isQuotationMark (char c) {
+    return c == 34;
 }
 
-void skipSpaceCharacters(TokenScanner scanner) {
-    char last;
-    for (last = readChar(scanner); isSpaceSeparator(last) && !isEOF(last); last = readChar(scanner));
 
-    if (!feof(scanner)) {
-        fseek(scanner, -1, SEEK_CUR);
+
+/*   Header Functions   */
+
+TokenScanner initScanner(char filename[]) {
+    TokenScanner new_scanner = fopen(filename, "r");
+
+    if (new_scanner == NULL) {
+        // error
+        exit(1);
     }
+
+    return new_scanner;
 }
 
 char* readToken(TokenScanner scanner) {
@@ -101,35 +174,6 @@ char* readToken(TokenScanner scanner) {
     }
 
     insert2buffer(buffer, &bufferidx, '\0');
-    return buffer;
-}
-
-bool isQuotationMark (char c) {
-    return c == 34;
-}
-
-char* readStringToken(TokenScanner scanner) {
-    char* buffer = NULL;
-    int bufferidx = 0;
-    insert2buffer(buffer, &bufferidx, '\"');
-
-    char last;
-    for (last = readChar(scanner); !isQuotationMark(last); last = readChar(scanner)) {
-        if (last == '\\') {
-            insert2buffer(buffer, &bufferidx, decode_escape(readChar(scanner)));
-        } else if (isEOF(last)) {
-            // error
-            exit(1);
-        } else {
-            insert2buffer(buffer, &bufferidx, last);
-        }
-    }
-
-    insert2buffer(buffer, &bufferidx, '\"');
-    insert2buffer(buffer, &bufferidx, '\0');
-
-    skipSpaceCharacters(scanner);
-
     return buffer;
 }
 

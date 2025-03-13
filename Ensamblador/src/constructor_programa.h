@@ -13,7 +13,7 @@
 
 ConsPrograma initConstructorPrograma();
 
-void addProgama(ConsPrograma prog, void* comando, TipoComando tipo, char label[]);
+void addProgama(ConsPrograma prog, void* comando, StatementType tipo, char label[]);
 
 void addLiteralPrograma(ConsPrograma prog, bin literal, char label[]);
 

@@ -4,8 +4,8 @@
 #include <ctype.h>
 
 
-Instruccion initInstruccion(char name[], int argc, int argstipos[], bin base, Traductor traductor){
-    Instruccion new = malloc(sizeof(struct __instruccion));
+Instruction initInstruccion(char name[], int argc, int argstipos[], bin base, Traductor traductor){
+    Instruction new = malloc(sizeof(struct __instruction));
     strcpy(new->name, name);
     new->argc = argc;
     for (int i = 0; i < argc; i++) {
@@ -16,12 +16,12 @@ Instruccion initInstruccion(char name[], int argc, int argstipos[], bin base, Tr
     return new;
 }
 
-PseudoIns initPseudoIns(char name[], bool tiene_arg, ArgsTipo arg_tipo, Efecto efecto) {
-	PseudoIns psi = malloc(sizeof(struct __pseudo_instruccion));
+PseudoIns initPseudoIns(char name[], int argc, ArgsTipo arg_tipo, Efecto efecto) {
+	PseudoIns psi = malloc(sizeof(struct __pseudo_instruction));
 	strcpy(psi->name, name);
 	psi->arg_tipo = arg_tipo;
 	psi->efecto = efecto;
-	psi->necesita_arg = tiene_arg;
+	psi->argc = argc;
 	return psi;
 }
 
@@ -38,59 +38,39 @@ Alias initAlias(char name[], int argc, ArgsTipo argstipos[], Expandir expandir) 
 
 
 #define getInstrucciones() {AND, OR, IADD, NOR, ANN, XOR, SUB, SLT, IADDI, LUI, LORI, LD, ST, LDR, STR, BRn, BRz, BRp, BRnz, BRnp, BRzp, JUMP, JR, JAL, JALR, TRAP, RTI, NULL};
-
-Instruccion deStringInstruccion(char token[], bool* error){
-	Instruccion instrucciones[] = getInstrucciones();
-	char cpy[strlen(token)];
-
-	strcpy(cpy, token);
-	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
-	
-    for(int i = 0; instrucciones[i]; i++){
-        if(!strcmp(cpy, instrucciones[i]->name)){
-            *error = false;
-            return instrucciones[i];
-        }
-    }
-    *error = true;
-    return NULL;
-}
-
 #define getPsInstrucciones() {ORIG, FILL, BLKW, STRINGZ, END, NULL};
-
-PseudoIns deStringPseudoIns(char token[], bool* error){
-	PseudoIns instrucciones[] = getPsInstrucciones();
-	char cpy[strlen(token)];
-
-	strcpy(cpy, token);
-	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
-	
-    for(int i = 0; instrucciones[i]; i++){
-        if(!strcmp(cpy, instrucciones[i]->name)){
-            *error = false;
-            return instrucciones[i];
-        }
-    }
-    *error = true;
-    return NULL;
-}
-
 #define getAliases() {ADD, MOV, NULL};
 
-Alias deStringAlias(char token[], bool* error){
-	Alias aliases[] = getAliases();
+InstanceType instanceFromString(char token[], StatementType* type) {
+	InstanceType instanced = malloc(sizeof(union __instance_type));
 	char cpy[strlen(token)];
-
 	strcpy(cpy, token);
 	for (char* p = cpy ; *p; ++p) *p = tolower(*p);
 	
+	Instruction instrucciones[] = getInstrucciones();
+    for(int i = 0; instrucciones[i]; i++){
+        if(!strcmp(cpy, instrucciones[i]->name)){
+			*type = OPERATION;
+            return instrucciones[i];
+        }
+    }
+    
+	PseudoIns pseudo_instrucciones[] = getPsInstrucciones();
+    for(int i = 0; pseudo_instrucciones[i]; i++){
+        if(!strcmp(cpy, pseudo_instrucciones[i]->name)){
+			*type = PSEUDOOP;
+            return pseudo_instrucciones[i];
+        }
+    }
+
+	Alias aliases[] = getAliases();
     for(int i = 0; aliases[i]; i++){
         if(!strcmp(cpy, aliases[i]->name)){
-            *error = false;
+			*type = ALIAS;
             return aliases[i];
         }
     }
-    *error = true;
+
     return NULL;
 }
 
@@ -126,11 +106,11 @@ void initConstantesGlobales() {
  	TRAP = initInstruccion(	"trap",   1, (int[]){TIPO_NUMERO}, 								   0b1010000000000000, traducirTRAP);
  	RTI = initInstruccion(	"rti", 	  0, NULL, 												   0b1011000000000000, traducirRTI);
 
-	ORIG = initPseudoIns(		".orig", 	true,  TIPO_NUMERO, 				 efectuarORIG);
-	FILL = initPseudoIns(		".fill", 	true,  TIPO_NUMERO | TIPO_ETIQUETA,  efectuarFILL);
-	BLKW = initPseudoIns(		".blkw", 	true,  TIPO_NUMERO, 				 efectuarBLKW);
-	STRINGZ = initPseudoIns(	".stringz", true,  TIPO_STRING, 				 efectuarSTRINGZ);
-	END = initPseudoIns(		".end", 	false, 0, 							 efectuarEND);
+	ORIG = initPseudoIns(		".orig", 	1,  TIPO_NUMERO, 				 efectuarORIG);
+	FILL = initPseudoIns(		".fill", 	1,  TIPO_NUMERO | TIPO_ETIQUETA, efectuarFILL);
+	BLKW = initPseudoIns(		".blkw", 	1,  TIPO_NUMERO, 				 efectuarBLKW);
+	STRINGZ = initPseudoIns(	".stringz", 1,  TIPO_STRING, 				 efectuarSTRINGZ);
+	END = initPseudoIns(		".end", 	0,  0, 							 efectuarEND);
 
 	ADD = initAlias("add",	3,	(ArgsTipo[]){TIPO_REGISTRO, TIPO_REGISTRO | TIPO_NUMERO, TIPO_REGISTRO | TIPO_NUMERO}, 		expandirADD);
 	MOV = initAlias("mov",	2,	(ArgsTipo[]){TIPO_REGISTRO | TIPO_ETIQUETA, TIPO_REGISTRO | TIPO_NUMERO | TIPO_ETIQUETA},	expandirMOV);
@@ -203,7 +183,7 @@ void argTipoComoStr(ArgsTipo tipo, char repr[]){
 }
 
 
-TipoToken encontrarTipoPrimerToken(Token tkn){
+TipoToken encontrarTipoToken(char* tkn){
 	bool err_parse_ins;
 	bool err_parse_psi;
 	deStringInstruccion(tkn, &err_parse_ins);

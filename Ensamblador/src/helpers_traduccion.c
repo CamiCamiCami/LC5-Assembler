@@ -5,7 +5,7 @@
 #define debug_print(...) do { if (DEBUG) fprintf(stderr, __VA_ARGS__); } while (0)
 
 void checkArgsOperacion(Operacion op){
-    Instruccion ins = op->ins;
+    Instruction ins = op->ins;
     Argumento* args = op->args;
     int c_arg = op->argc;
 

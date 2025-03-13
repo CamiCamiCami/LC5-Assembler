@@ -48,7 +48,7 @@ Argumento initArgumentoEtiqueta(char etiqueta[]){
     return internalInitArgumento(TIPO_ETIQUETA, ptr);
 }
 
-Argumento initArgumento(Token token){
+Argumento initArgumento(char* token){
     if (token[0] == '\0'){
         // Manejo de Error
         fprintf(stderr, "No se puede parsear un token vacio.\n");
