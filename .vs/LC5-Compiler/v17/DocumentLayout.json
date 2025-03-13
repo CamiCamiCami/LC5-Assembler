@@ -1,12 +1,71 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9DBAD0BB-AF06-4DFD-8955-70DC86D703BB}|Parser\\Parser.vcxproj|C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Parser\\StringMatcher.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9DBAD0BB-AF06-4DFD-8955-70DC86D703BB}|Parser\\Parser.vcxproj|solutionrelative:Parser\\StringMatcher.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9DBAD0BB-AF06-4DFD-8955-70DC86D703BB}|Parser\\Parser.vcxproj|C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Parser\\StringMatcher.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{9DBAD0BB-AF06-4DFD-8955-70DC86D703BB}|Parser\\Parser.vcxproj|solutionrelative:Parser\\StringMatcher.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{339F26FE-A1C6-448F-BD75-377CC6883CD2}|Assembler\\LC5-Assembler.vcxproj|C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Assembler\\alias.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{339F26FE-A1C6-448F-BD75-377CC6883CD2}|Assembler\\LC5-Assembler.vcxproj|solutionrelative:Assembler\\alias.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StringMatcher.h",
+              "DocumentMoniker": "C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Parser\\StringMatcher.h",
+              "RelativeDocumentMoniker": "Parser\\StringMatcher.h",
+              "ToolTip": "C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Parser\\StringMatcher.h",
+              "RelativeToolTip": "Parser\\StringMatcher.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-13T18:29:15.407Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "StringMatcher.c",
+              "DocumentMoniker": "C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Parser\\StringMatcher.c",
+              "RelativeDocumentMoniker": "Parser\\StringMatcher.c",
+              "ToolTip": "C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Parser\\StringMatcher.c",
+              "RelativeToolTip": "Parser\\StringMatcher.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-03-13T18:28:08.589Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "alias.c",
+              "DocumentMoniker": "C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Assembler\\alias.c",
+              "RelativeDocumentMoniker": "Assembler\\alias.c",
+              "ToolTip": "C:\\Users\\pc\\OneDrive\\Workspace\\LC5-Assembler\\Assembler\\alias.c",
+              "RelativeToolTip": "Assembler\\alias.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-03-13T18:21:55.655Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
