@@ -1,2 +1,0 @@
-# Cobampilador
-hay que compilar

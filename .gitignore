@@ -1,6 +1,3 @@
-ensamblador.o
 prueba.c
 pruebas
-codigo.bin
-sparse
-Parser
+*.o

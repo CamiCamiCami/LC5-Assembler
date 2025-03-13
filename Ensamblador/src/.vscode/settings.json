@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "escaner.h": "c",
-        "cola.h": "c",
-        "token_scanner.h": "c"
-    }
-}
