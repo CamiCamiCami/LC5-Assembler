@@ -3,6 +3,40 @@
 #include "helpers.h"
 #include <ctype.h>
 
+Instruccion AND;
+Instruccion OR;
+Instruccion IADD;
+Instruccion NOR;
+Instruccion ANN;
+Instruccion XOR;
+Instruccion SUB;
+Instruccion SLT;
+Instruccion IADDI;
+Instruccion LUI;
+Instruccion LORI;
+Instruccion LD;
+Instruccion ST;
+Instruccion LDR;
+Instruccion STR;
+Instruccion BRn;
+Instruccion BRz;
+Instruccion BRp;
+Instruccion BRnz;
+Instruccion BRnp;
+Instruccion BRzp;
+Instruccion JUMP;
+Instruccion JR;
+Instruccion JALR;
+Instruccion JAL;
+Instruccion TRAP;
+Instruccion RTI;
+PseudoIns ORIG;
+PseudoIns FILL;
+PseudoIns BLKW;
+PseudoIns STRINGZ;
+PseudoIns END;
+Alias ADD;
+Alias MOV;
 
 Instruction initInstruccion(char name[], int argc, int argstipos[], bin base, Traductor traductor){
     Instruction new = malloc(sizeof(struct __instruction));

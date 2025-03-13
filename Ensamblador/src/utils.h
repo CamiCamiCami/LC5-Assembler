@@ -188,11 +188,11 @@ struct __pseudo_instruction {
     Efecto efecto;
 };
 
-PseudoIns ORIG;
-PseudoIns FILL;
-PseudoIns BLKW;
-PseudoIns STRINGZ;
-PseudoIns END;
+extern PseudoIns ORIG;
+extern PseudoIns FILL;
+extern PseudoIns BLKW;
+extern PseudoIns STRINGZ;
+extern PseudoIns END;
 
 struct __alias {
     char name[10];
@@ -201,7 +201,7 @@ struct __alias {
     Expandir expandir;
 };
 
-Alias ADD;
-Alias MOV;
+extern Alias ADD;
+extern Alias MOV;
 
 #endif
