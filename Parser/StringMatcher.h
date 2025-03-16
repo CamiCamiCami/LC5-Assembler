@@ -16,3 +16,12 @@ struct __string_matcher {
 
 typedef struct __match_entry* MatchEntry;
 typedef struct __string_matcher* StringMatcher;
+
+const char* matchString(StringMatcher matcher, const char* string);
+
+StringMatcher newStringMatcher();
+
+void addWord(StringMatcher matcher, const char word[]);
+
+void freeStringMatcher(StringMatcher matcher);
+

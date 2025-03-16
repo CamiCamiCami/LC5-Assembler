@@ -1,0 +1,3 @@
+﻿  prueba.c
+C:\Users\pc\OneDrive\Workspace\LC5-Assembler\Parser\prueba.c(16,8): warning C4090: 'initializing': different 'const' qualifiers
+  Parser.vcxproj -> C:\Users\pc\OneDrive\Workspace\LC5-Assembler\x64\Debug\Parser.exe
