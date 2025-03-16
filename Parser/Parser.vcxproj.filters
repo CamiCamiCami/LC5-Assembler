@@ -18,6 +18,9 @@
     <ClCompile Include="StringMatcher.c">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="prueba.c">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StringMatcher.h">

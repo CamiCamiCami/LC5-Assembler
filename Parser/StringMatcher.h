@@ -1,10 +1,10 @@
 #pragma once
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct __match_entry {
-	bool isEnd;
-	const char* full_word;
+	const char* word_formed;
 	struct __string_matcher* next;
 	char letter;
 };
